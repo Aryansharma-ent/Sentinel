@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BarChart2, Zap, ArrowLeft, Home } from 'lucide-react';
+import { BarChart2, Zap, ArrowLeft } from 'lucide-react';
 import axios from 'axios';
 import LandingPage from './components/LandingPage.jsx';
 import AnalyzerTab from './components/AnalyzerTab.jsx';
@@ -52,7 +52,7 @@ export default function App() {
 
       {/* ── Desktop Sidebar ── */}
       <aside className="sidebar">
-        <div className="sidebar-logo" onClick={() => setView('landing')} title="Go to Home Landing Page" style={{ cursor: 'pointer' }}>
+        <div className="sidebar-logo" onClick={() => setView('landing')} title="Click to return to Landing Page" style={{ cursor: 'pointer' }}>
           <img src={sentinelLogo} alt="SENTINEL Logo" className="logo-img" />
           <div>
             <div className="logo-text">SENTINEL</div>
@@ -61,16 +61,7 @@ export default function App() {
         </div>
 
         <nav className="sidebar-nav">
-          <button
-            className="nav-item"
-            onClick={() => setView('landing')}
-            style={{ marginBottom: '0.5rem', color: 'var(--accent)' }}
-          >
-            <Home size={15} className="nav-icon" />
-            Landing Page
-          </button>
-
-          <div className="nav-section-label">Workspace</div>
+          <div className="nav-section-label">Platform</div>
           {NAV_ITEMS.map(item => {
             const Icon = item.icon;
             return (
@@ -105,12 +96,12 @@ export default function App() {
         {/* Top Bar */}
         <div className="top-bar">
           {/* Mobile Logo */}
-          <div className="mobile-logo" onClick={() => setView('landing')}>
+          <div className="mobile-logo" onClick={() => setView('landing')} style={{ cursor: 'pointer' }}>
             <img src={sentinelLogo} alt="SENTINEL Logo" className="logo-img-mobile" />
             <span className="logo-text">SENTINEL</span>
           </div>
 
-          <span className="top-bar-title">
+          <span className="top-bar-title" onClick={() => setView('landing')} style={{ cursor: 'pointer' }} title="Click to return to Landing Page">
             SENTINEL <span className="top-bar-sep">/</span>{' '}
             <strong>{tab === 'analyzer' ? 'Analyzer' : 'Dashboard'}</strong>
           </span>
@@ -166,13 +157,6 @@ export default function App() {
 
       {/* ── Mobile Bottom Nav Bar ── */}
       <nav className="mobile-bottom-nav">
-        <button
-          className="mobile-nav-item"
-          onClick={() => setView('landing')}
-        >
-          <Home size={20} />
-          <span>Home</span>
-        </button>
         {NAV_ITEMS.map(item => {
           const Icon = item.icon;
           const active = tab === item.id;
