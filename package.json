@@ -1,0 +1,24 @@
+{
+  "name": "text-intelligence-monorepo",
+  "version": "2.0.0",
+  "description": "Full-Stack Text Intelligence Platform Monorepo (backend/, frontend/, python_ml/)",
+  "main": "backend/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "dev:backend": "cd backend && node --watch server.js",
+    "dev:frontend": "cd frontend && npx -y vite",
+    "build:frontend": "cd frontend && npx -y vite build"
+  },
+  "keywords": [
+    "mern",
+    "mongodb",
+    "express",
+    "react",
+    "nodejs",
+    "python",
+    "flask"
+  ],
+  "author": "College Student",
+  "license": "ISC"
+}
