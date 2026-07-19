@@ -1,5 +1,5 @@
 import Review from '../models/Review.js';
-import { analyzeTextWithFlask } from '../services/flaskService.js';
+import { analyzeTextWithFlask, jsFallbackAnalysis } from '../services/flaskService.js';
 
 export const analyzeText = async (req, res, next) => {
   try {
@@ -13,7 +13,13 @@ export const analyzeText = async (req, res, next) => {
     }
 
     console.log(`[POST /api/analyze] Processing request...`);
-    const mlResults = await analyzeTextWithFlask(text);
+    let mlResults;
+    try {
+      mlResults = await analyzeTextWithFlask(text);
+    } catch (mlErr) {
+      console.warn(`[ML Error] Exception during analysis: ${mlErr.message}. Executing fallback.`);
+      mlResults = jsFallbackAnalysis(text);
+    }
 
     let savedData;
     try {

@@ -5,7 +5,10 @@ const FLASK_SERVICE_URL = process.env.FLASK_SERVICE_URL || 'http://127.0.0.1:500
 /**
  * JS Fallback Engine when Python microservice is offline or sleeping on Render
  */
-function jsFallbackAnalysis(text) {
+/**
+ * JS Fallback Engine when Python microservice is offline or sleeping on Render
+ */
+export function jsFallbackAnalysis(text) {
   const lower = text.toLowerCase();
   const words = text.trim().split(/\s+/).filter(Boolean);
   const wordCount = words.length || 1;
@@ -80,21 +83,19 @@ function jsFallbackAnalysis(text) {
 }
 
 /**
- * Service executing parallel HTTP requests with automatic JS fallback
+ * Service executing parallel HTTP requests with guaranteed 100% fail-safe fallback
  */
 export const analyzeTextWithFlask = async (text) => {
-  // 1. Instant fallback on cloud environments (e.g. Render) if no remote FLASK_SERVICE_URL is set
-  const isLocalDefault = !process.env.FLASK_SERVICE_URL || process.env.FLASK_SERVICE_URL.includes('127.0.0.1') || process.env.FLASK_SERVICE_URL.includes('localhost');
-  const isCloudProduction = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
-
-  if (isCloudProduction && isLocalDefault) {
-    console.log(`[flaskService] Cloud environment without remote FLASK_SERVICE_URL. Executing instant JS Engine fallback.`);
-    return jsFallbackAnalysis(text);
-  }
-
-  // 2. Try calling remote Flask microservice with 3s timeout
   try {
-    const axiosConfig = { timeout: 3000 };
+    const remoteUrl = process.env.FLASK_SERVICE_URL;
+
+    // 1. If FLASK_SERVICE_URL is not set or points to localhost/127.0.0.1, use JS engine directly
+    if (!remoteUrl || remoteUrl.includes('127.0.0.1') || remoteUrl.includes('localhost')) {
+      return jsFallbackAnalysis(text);
+    }
+
+    // 2. Try remote Flask endpoint with a strict 2.5s timeout
+    const axiosConfig = { timeout: 2500 };
     const [
       sentimentRes,
       toxicityRes,
@@ -103,12 +104,12 @@ export const analyzeTextWithFlask = async (text) => {
       keywordsRes,
       readabilityRes
     ] = await Promise.all([
-      axios.post(`${FLASK_SERVICE_URL}/predict/sentiment`, { text }, axiosConfig),
-      axios.post(`${FLASK_SERVICE_URL}/predict/toxicity`, { text }, axiosConfig),
-      axios.post(`${FLASK_SERVICE_URL}/predict/emotion`, { text }, axiosConfig),
-      axios.post(`${FLASK_SERVICE_URL}/predict/spam`, { text }, axiosConfig),
-      axios.post(`${FLASK_SERVICE_URL}/extract/keywords`, { text }, axiosConfig),
-      axios.post(`${FLASK_SERVICE_URL}/analyze/readability`, { text }, axiosConfig)
+      axios.post(`${remoteUrl}/predict/sentiment`, { text }, axiosConfig),
+      axios.post(`${remoteUrl}/predict/toxicity`, { text }, axiosConfig),
+      axios.post(`${remoteUrl}/predict/emotion`, { text }, axiosConfig),
+      axios.post(`${remoteUrl}/predict/spam`, { text }, axiosConfig),
+      axios.post(`${remoteUrl}/extract/keywords`, { text }, axiosConfig),
+      axios.post(`${remoteUrl}/analyze/readability`, { text }, axiosConfig)
     ]);
 
     return {
@@ -128,7 +129,7 @@ export const analyzeTextWithFlask = async (text) => {
       gradeLevel: readabilityRes.data.gradeLevel
     };
   } catch (error) {
-    console.warn(`[flaskService] Flask microservice unreachable (${error.message}). Executing JS Engine fallback.`);
+    console.warn(`[flaskService] Microservice error (${error.message}). Executing JS Engine fallback.`);
     return jsFallbackAnalysis(text);
   }
 };
