@@ -15,30 +15,41 @@ export const analyzeText = async (req, res, next) => {
     console.log(`[POST /api/analyze] Processing request...`);
     const mlResults = await analyzeTextWithFlask(text);
 
-    const newReview = new Review({
-      text,
-      sentiment: mlResults.sentiment,
-      sentimentConfidence: mlResults.sentimentConfidence,
-      toxic: mlResults.toxic,
-      toxicityConfidence: mlResults.toxicityConfidence,
-      emotion: mlResults.emotion,
-      emotionConfidence: mlResults.emotionConfidence,
-      emotionScores: mlResults.emotionScores,
-      isSpam: mlResults.isSpam,
-      spamConfidence: mlResults.spamConfidence,
-      keywords: mlResults.keywords,
-      wordCount: mlResults.wordCount,
-      charCount: mlResults.charCount,
-      readingEase: mlResults.readingEase,
-      gradeLevel: mlResults.gradeLevel
-    });
+    let savedData;
+    try {
+      const newReview = new Review({
+        text,
+        sentiment: mlResults.sentiment,
+        sentimentConfidence: mlResults.sentimentConfidence,
+        toxic: mlResults.toxic,
+        toxicityConfidence: mlResults.toxicityConfidence,
+        emotion: mlResults.emotion,
+        emotionConfidence: mlResults.emotionConfidence,
+        emotionScores: mlResults.emotionScores,
+        isSpam: mlResults.isSpam,
+        spamConfidence: mlResults.spamConfidence,
+        keywords: mlResults.keywords,
+        wordCount: mlResults.wordCount,
+        charCount: mlResults.charCount,
+        readingEase: mlResults.readingEase,
+        gradeLevel: mlResults.gradeLevel
+      });
 
-    await newReview.save();
-    console.log(`✓ Review document persisted to MongoDB (ID: ${newReview._id})`);
+      savedData = await newReview.save();
+      console.log(`✓ Review document persisted to MongoDB (ID: ${savedData._id})`);
+    } catch (dbErr) {
+      console.warn(`[MongoDB Warning] Could not persist review: ${dbErr.message}`);
+      savedData = {
+        _id: Date.now().toString(),
+        text,
+        createdAt: new Date().toISOString(),
+        ...mlResults
+      };
+    }
 
     return res.status(201).json({
       success: true,
-      data: newReview
+      data: savedData
     });
 
   } catch (error) {
