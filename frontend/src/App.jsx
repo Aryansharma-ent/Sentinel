@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BarChart2, Zap } from 'lucide-react';
+import { LayoutGrid, Zap, BarChart2 } from 'lucide-react';
 import axios from 'axios';
+import OverviewTab from './components/OverviewTab.jsx';
 import AnalyzerTab from './components/AnalyzerTab.jsx';
 import DashboardTab from './components/DashboardTab.jsx';
 import sentinelLogo from './assets/sentinel.png';
 import './index.css';
 
 const NAV_ITEMS = [
-  { id: 'analyzer',  label: 'Analyzer',  icon: Zap,      desc: 'Analyze Text'    },
-  { id: 'dashboard', label: 'Dashboard', icon: BarChart2, desc: 'View Analytics'  },
+  { id: 'overview',  label: 'Overview',  icon: LayoutGrid, desc: 'Platform Features' },
+  { id: 'analyzer',  label: 'Analyzer',  icon: Zap,        desc: 'Analyze Text'       },
+  { id: 'dashboard', label: 'Dashboard', icon: BarChart2,   desc: 'View Analytics'     },
 ];
 
 export default function App() {
-  const [tab, setTab]       = useState('analyzer');
+  const [tab, setTab]       = useState('overview');
   const [health, setHealth] = useState({ flask: null, express: null });
 
   useEffect(() => {
@@ -41,7 +43,7 @@ export default function App() {
 
       {/* ── Desktop Sidebar ── */}
       <aside className="sidebar">
-        <div className="sidebar-logo">
+        <div className="sidebar-logo" onClick={() => setTab('overview')} style={{ cursor: 'pointer' }}>
           <img src={sentinelLogo} alt="SENTINEL Logo" className="logo-img" />
           <div>
             <div className="logo-text">SENTINEL</div>
@@ -85,14 +87,14 @@ export default function App() {
         {/* Top Bar */}
         <div className="top-bar">
           {/* Mobile Logo */}
-          <div className="mobile-logo">
+          <div className="mobile-logo" onClick={() => setTab('overview')}>
             <img src={sentinelLogo} alt="SENTINEL Logo" className="logo-img-mobile" />
             <span className="logo-text">SENTINEL</span>
           </div>
 
           <span className="top-bar-title">
             SENTINEL <span className="top-bar-sep">/</span>{' '}
-            <strong>{tab === 'analyzer' ? 'Analyzer' : 'Dashboard'}</strong>
+            <strong>{tab === 'overview' ? 'Overview' : tab === 'analyzer' ? 'Analyzer' : 'Dashboard'}</strong>
           </span>
 
           {/* Mobile status dots */}
@@ -111,7 +113,18 @@ export default function App() {
         {/* Page Content */}
         <div className="page-content">
           <AnimatePresence mode="wait">
-            {tab === 'analyzer' ? (
+            {tab === 'overview' && (
+              <motion.div
+                key="overview"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
+              >
+                <OverviewTab onNavigate={setTab} />
+              </motion.div>
+            )}
+            {tab === 'analyzer' && (
               <motion.div
                 key="analyzer"
                 initial={{ opacity: 0, y: 12 }}
@@ -121,7 +134,8 @@ export default function App() {
               >
                 <AnalyzerTab />
               </motion.div>
-            ) : (
+            )}
+            {tab === 'dashboard' && (
               <motion.div
                 key="dashboard"
                 initial={{ opacity: 0, y: 12 }}
