@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Smile, Zap, ShieldAlert, BookOpen, Tag, Cpu, Layers, Database, Sparkles, CheckCircle2 } from 'lucide-react';
 import sentinelLogo from '../assets/sentinel.png';
 
 /* ─── Sample input text fragments cycling left panel ─── */
@@ -49,7 +49,55 @@ const OUTPUT_SETS = [
   ],
 ];
 
-/* ─── Animated SVG engine rings ─── */
+/* ─── 6 Microservice Feature Details ─── */
+const FEATURES = [
+  {
+    icon: Smile,
+    color: '#10b981',
+    title: '6-Class Emotion Engine',
+    desc: 'Multi-class Logistic Regression trained on 416,809 records. Evaluates Joy, Sadness, Anger, Fear, Love, and Surprise with full Softmax confidence probability distributions.'
+  },
+  {
+    icon: Zap,
+    color: '#8b5cf6',
+    title: 'N-Gram Sentiment Classifier',
+    desc: 'TF-IDF (1,2) N-gram model trained on 50,000 IMDB movie reviews achieving 89.67% accuracy for ultra-fast binary positive and negative classification.'
+  },
+  {
+    icon: ShieldAlert,
+    color: '#ef4444',
+    title: 'Toxicity & Threat Guard',
+    desc: 'Real-time moderation engine that scans text for insults, profanity, harassment patterns, and offensive speech to protect digital communities.'
+  },
+  {
+    icon: ShieldAlert,
+    color: '#f59e0b',
+    title: 'Spam & Phishing Detector',
+    desc: 'Hybrid pattern-matching and ML pipeline identifying scam presets, phishing URLs, malicious links, and suspicious text patterns.'
+  },
+  {
+    icon: BookOpen,
+    color: '#3b82f6',
+    title: 'Readability & Grade Assessor',
+    desc: 'Calculates Flesch-Kincaid reading ease scores, grade level difficulty, word density, and sentence complexity metrics.'
+  },
+  {
+    icon: Tag,
+    color: '#ec4899',
+    title: 'Key Term Extraction',
+    desc: 'Server-side NLP keyword mining engine that strips stop-words and isolates dominant descriptive concepts from raw text.'
+  }
+];
+
+/* ─── Architecture Pipeline ─── */
+const PIPELINE_STEPS = [
+  { step: '01', title: 'React Client SPA', desc: 'Vite-powered single page interface with Framer Motion animations' },
+  { step: '02', title: 'Express Gateway', desc: 'Node.js backend orchestrates parallel Promise.all HTTP microservices' },
+  { step: '03', title: 'Python Flask ML', desc: '4 Flask endpoints evaluate Scikit-Learn .pkl models in parallel' },
+  { step: '04', title: 'MongoDB Atlas', desc: 'Persists evaluations and runs multi-stage $facet aggregation pipelines' }
+];
+
+/* ─── Animated SVG Engine Core ─── */
 function EngineCore({ processing }) {
   return (
     <svg
@@ -126,7 +174,7 @@ function EngineCore({ processing }) {
   );
 }
 
-/* ─── Streaming text line ─── */
+/* ─── Stream Line ─── */
 function StreamLine({ text, delay, dim }) {
   return (
     <div style={{
@@ -147,7 +195,6 @@ function StreamLine({ text, delay, dim }) {
   );
 }
 
-/* ─── Main Component ─── */
 export default function LandingPage({ onLaunch }) {
   const [activeInput,    setActiveInput]    = useState(0);
   const [outputSet,      setOutputSet]      = useState(0);
@@ -181,13 +228,21 @@ export default function LandingPage({ onLaunch }) {
         .sci-fi-landing {
           min-height: 100vh;
           width: 100%;
-          background: #000;
+          background: #000000;
           color: #e5e5e5;
           font-family: 'Inter', -apple-system, sans-serif;
           display: flex;
           flex-direction: column;
           position: relative;
           overflow-x: hidden;
+        }
+
+        .control-hero-section {
+          min-height: calc(100vh - 52px);
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          border-bottom: 1px solid rgba(255,255,255,0.08);
         }
 
         .control-room-grid {
@@ -209,7 +264,7 @@ export default function LandingPage({ onLaunch }) {
           z-index: 10;
           min-height: 44px;
           border-top: 1px solid rgba(255,255,255,0.05);
-          background: rgba(0,0,0,0.8);
+          background: rgba(0,0,0,0.85);
           backdrop-filter: blur(8px);
           display: flex;
           align-items: center;
@@ -225,6 +280,28 @@ export default function LandingPage({ onLaunch }) {
           flex-wrap: wrap;
         }
 
+        .section-container {
+          max-width: 1100px;
+          margin: 0 auto;
+          padding: 5rem 1.5rem;
+          position: relative;
+          z-index: 5;
+        }
+
+        .feature-card-sci {
+          background: rgba(10, 10, 10, 0.8);
+          border: 1px solid rgba(255, 255, 255, 0.07);
+          border-radius: 12px;
+          padding: 1.5rem;
+          transition: all 0.2s ease;
+        }
+
+        .feature-card-sci:hover {
+          border-color: rgba(139, 92, 246, 0.35);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 30px rgba(139, 92, 246, 0.1);
+        }
+
         @keyframes spin1 { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes spin2 { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
         @keyframes spin3 { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -232,31 +309,28 @@ export default function LandingPage({ onLaunch }) {
         @keyframes coreRing { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
         @keyframes fadeStream { 0% { opacity: 0; transform: translateX(-6px); } 15% { opacity: 1; transform: translateX(0); } 80% { opacity: 1; } 100% { opacity: 0.2; } }
         @keyframes scanlineMove { 0% { top: -2px; } 100% { top: 100%; } }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         @keyframes activeGlow { 0%, 100% { box-shadow: 0 0 6px rgba(6,182,212,0.3); } 50% { box-shadow: 0 0 18px rgba(6,182,212,0.7), 0 0 40px rgba(6,182,212,0.2); } }
 
-        /* ── Mobile & Tablet Responsiveness ── */
         @media (max-width: 900px) {
+          .control-hero-section {
+            min-height: auto;
+          }
           .control-room-grid {
             grid-template-columns: 1fr;
           }
-
           .control-header-nav {
             display: none;
           }
-
           .panel-left, .panel-center, .panel-right {
             border-right: none !important;
             border-bottom: 1px solid rgba(139,92,246,0.15);
             padding: 1.25rem 1rem !important;
           }
-
           .control-status-bar {
             flex-direction: column;
             align-items: center;
             text-align: center;
           }
-
           .status-items-group {
             justify-content: center;
             gap: 1rem;
@@ -287,15 +361,14 @@ export default function LandingPage({ onLaunch }) {
 
       {/* ═══ TOP HEADER ═══ */}
       <header style={{
-        position: 'relative', zIndex: 10,
+        position: 'sticky', top: 0, zIndex: 50,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 1.25rem', height: '52px',
         borderBottom: '1px solid rgba(255,255,255,0.05)',
-        background: 'rgba(0,0,0,0.6)',
-        backdropFilter: 'blur(8px)',
+        background: 'rgba(0,0,0,0.85)',
+        backdropFilter: 'blur(12px)',
         flexShrink: 0,
       }}>
-        {/* Left: logo + mission label */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <img src={sentinelLogo} alt="SENTINEL" style={{ width: 26, height: 26, borderRadius: 6, objectFit: 'contain' }} />
@@ -314,7 +387,6 @@ export default function LandingPage({ onLaunch }) {
           </div>
         </div>
 
-        {/* Right: status + CTA */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
             <div style={{
@@ -345,216 +417,241 @@ export default function LandingPage({ onLaunch }) {
         </div>
       </header>
 
-      {/* ═══ MAIN HEADLINE ═══ */}
-      <div style={{
-        position: 'relative', zIndex: 5,
-        padding: '1.25rem 1.25rem 0.5rem',
-        flexShrink: 0,
-      }}>
-        <h1 style={{
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
-          fontSize: 'clamp(1.35rem, 3.5vw, 2.25rem)',
-          fontWeight: 800,
-          letterSpacing: '-0.03em',
-          color: '#fff',
-          lineHeight: 1.1,
-          margin: 0,
-        }}>
-          UNDERSTANDING LANGUAGE{' '}
-          <span style={{
-            background: 'linear-gradient(90deg, #a78bfa, #38bdf8)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
+      {/* ═══ SECTION 1: CONTROL ROOM HERO HERO VISUALIZATION ═══ */}
+      <div className="control-hero-section">
+
+        <div style={{ position: 'relative', zIndex: 5, padding: '1.25rem 1.25rem 0.5rem', flexShrink: 0 }}>
+          <h1 style={{
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontSize: 'clamp(1.35rem, 3.5vw, 2.25rem)',
+            fontWeight: 800,
+            letterSpacing: '-0.03em',
+            color: '#fff',
+            lineHeight: 1.1,
+            margin: 0,
           }}>
-            AT MACHINE SPEED
-          </span>
-        </h1>
-      </div>
-
-      {/* ═══ THREE-PANEL CONTROL ROOM ═══ */}
-      <div className="control-room-grid">
-
-        {/* ── LEFT: INPUT STREAM ── */}
-        <div className="panel-left" style={{
-          borderRight: '1px solid rgba(139,92,246,0.15)',
-          padding: '1.25rem 1.25rem 1rem',
-          display: 'flex', flexDirection: 'column',
-          position: 'relative',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.875rem', flexShrink: 0 }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#a78bfa', boxShadow: '0 0 6px #a78bfa' }} />
-            <span style={{ fontSize: '9px', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.3)', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }}>
-              RAW INPUT STREAM
+            UNDERSTANDING LANGUAGE{' '}
+            <span style={{
+              background: 'linear-gradient(90deg, #a78bfa, #38bdf8)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>
+              AT MACHINE SPEED
             </span>
-          </div>
-
-          <div style={{
-            background: 'rgba(139,92,246,0.07)',
-            border: '1px solid rgba(139,92,246,0.2)',
-            borderRadius: '6px',
-            padding: '0.75rem',
-            marginBottom: '1rem',
-            flexShrink: 0,
-            animation: 'activeGlow 2s ease-in-out infinite',
-          }}>
-            <div style={{ fontSize: '9px', color: '#a78bfa', fontFamily: 'JetBrains Mono, monospace', marginBottom: '0.4rem', letterSpacing: '0.1em' }}>
-              ANALYZING ›
-            </div>
-            <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', lineHeight: 1.5, fontFamily: 'JetBrains Mono, monospace' }}>
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={activeInput}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  "{INPUT_FRAGMENTS[activeInput].slice(0, 60)}{INPUT_FRAGMENTS[activeInput].length > 60 ? '...' : ''}"
-                </motion.span>
-              </AnimatePresence>
-            </div>
-          </div>
-
-          <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
-            {INPUT_FRAGMENTS.slice(0, 6).map((text, i) => (
-              <StreamLine
-                key={i}
-                text={text.slice(0, 48)}
-                delay={i * 0.3}
-                dim={i > 3}
-              />
-            ))}
-          </div>
+          </h1>
         </div>
 
-        {/* ── CENTER: ENGINE ── */}
-        <div className="panel-center" style={{
-          borderRight: '1px solid rgba(6,182,212,0.15)',
-          padding: '1rem',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          position: 'relative',
-          background: 'radial-gradient(ellipse at center, rgba(139,92,246,0.05) 0%, transparent 70%)',
-          minHeight: '260px',
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: processing ? '#f59e0b' : '#06b6d4', boxShadow: processing ? '0 0 8px #f59e0b' : '0 0 8px #06b6d4', transition: 'all 0.3s ease' }} />
-            <span style={{ fontSize: '9px', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.3)', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }}>
-              {processing ? 'COMPUTING...' : 'ML ENGINE ACTIVE'}
-            </span>
-          </div>
+        {/* 3-PANEL CONTROL ROOM */}
+        <div className="control-room-grid">
 
-          <div style={{ width: '100%', maxWidth: '260px' }}>
-            <EngineCore processing={processing} />
-          </div>
+          {/* Left Panel */}
+          <div className="panel-left" style={{ borderRight: '1px solid rgba(139,92,246,0.15)', padding: '1.25rem 1.25rem 1rem', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.875rem', flexShrink: 0 }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#a78bfa', boxShadow: '0 0 6px #a78bfa' }} />
+              <span style={{ fontSize: '9px', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.3)', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }}>
+                RAW INPUT STREAM
+              </span>
+            </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1.25rem', marginTop: '0.75rem' }}>
-            {['TF-IDF', 'N-GRAM', 'SOFTMAX'].map((label, i) => (
-              <span key={i} style={{
-                fontSize: '9px',
-                fontFamily: 'JetBrains Mono, monospace',
-                color: processing ? '#06b6d4' : 'rgba(255,255,255,0.3)',
-                letterSpacing: '0.08em',
-                fontWeight: 700,
-                transition: 'color 0.3s ease',
-              }}>{label}</span>
-            ))}
-          </div>
-        </div>
-
-        {/* ── RIGHT: OUTPUT ANALYSIS ── */}
-        <div className="panel-right" style={{
-          padding: '1.25rem 1.25rem 1rem',
-          display: 'flex', flexDirection: 'column',
-          position: 'relative',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.875rem', flexShrink: 0 }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 6px #10b981' }} />
-            <span style={{ fontSize: '9px', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.3)', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }}>
-              OUTPUT ANALYSIS
-            </span>
-          </div>
-
-          <AnimatePresence mode="wait">
-            {outputVisible && (
-              <motion.div
-                key={outputSet}
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.35, ease: 'easeOut' }}
-                style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', flexShrink: 0 }}
-              >
-                {outputs.map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: 16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.07, duration: 0.3 }}
-                    style={{
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      padding: '0.55rem 0.75rem',
-                      background: `${item.color}08`,
-                      border: `1px solid ${item.color}22`,
-                      borderLeft: `2px solid ${item.color}`,
-                      borderRadius: '6px',
-                    }}
+            <div style={{ background: 'rgba(139,92,246,0.07)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: '6px', padding: '0.75rem', marginBottom: '1rem', flexShrink: 0, animation: 'activeGlow 2s ease-in-out infinite' }}>
+              <div style={{ fontSize: '9px', color: '#a78bfa', fontFamily: 'JetBrains Mono, monospace', marginBottom: '0.4rem', letterSpacing: '0.1em' }}>
+                ANALYZING ›
+              </div>
+              <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', lineHeight: 1.5, fontFamily: 'JetBrains Mono, monospace' }}>
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={activeInput}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <span style={{ fontSize: '9.5px', letterSpacing: '0.12em', fontFamily: 'JetBrains Mono, monospace', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>
-                      {item.label}
-                    </span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <div style={{ width: 5, height: 5, borderRadius: '50%', background: item.color, boxShadow: `0 0 6px ${item.color}` }} />
-                      <span style={{ fontSize: '11.5px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: item.color, letterSpacing: '0.06em' }}>
-                        {item.value}
-                      </span>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-      </div>
-
-      {/* ═══ BOTTOM STATUS BAR ═══ */}
-      <div className="control-status-bar">
-        <div className="status-items-group">
-          {[
-            { label: 'RECORDS', value: '416,809' },
-            { label: 'ENGINES', value: '6 ACTIVE' },
-            { label: 'ACCURACY', value: '90.6%' },
-            { label: 'LATENCY', value: '<100ms' },
-          ].map((s, i) => (
-            <div key={i} style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
-              <span style={{ fontSize: '9px', color: 'rgba(255,255,255,0.25)', fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.1em' }}>{s.label}</span>
-              <span style={{ fontSize: '9.5px', color: '#a78bfa', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }}>{s.value}</span>
+                    "{INPUT_FRAGMENTS[activeInput].slice(0, 60)}{INPUT_FRAGMENTS[activeInput].length > 60 ? '...' : ''}"
+                  </motion.span>
+                </AnimatePresence>
+              </div>
             </div>
-          ))}
+
+            <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
+              {INPUT_FRAGMENTS.slice(0, 6).map((text, i) => (
+                <StreamLine key={i} text={text.slice(0, 48)} delay={i * 0.3} dim={i > 3} />
+              ))}
+            </div>
+          </div>
+
+          {/* Center Engine */}
+          <div className="panel-center" style={{ borderRight: '1px solid rgba(6,182,212,0.15)', padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', background: 'radial-gradient(ellipse at center, rgba(139,92,246,0.05) 0%, transparent 70%)', minHeight: '260px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: processing ? '#f59e0b' : '#06b6d4', boxShadow: processing ? '0 0 8px #f59e0b' : '0 0 8px #06b6d4', transition: 'all 0.3s ease' }} />
+              <span style={{ fontSize: '9px', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.3)', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }}>
+                {processing ? 'COMPUTING...' : 'ML ENGINE ACTIVE'}
+              </span>
+            </div>
+
+            <div style={{ width: '100%', maxWidth: '260px' }}>
+              <EngineCore processing={processing} />
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1.25rem', marginTop: '0.75rem' }}>
+              {['TF-IDF', 'N-GRAM', 'SOFTMAX'].map((label, i) => (
+                <span key={i} style={{ fontSize: '9px', fontFamily: 'JetBrains Mono, monospace', color: processing ? '#06b6d4' : 'rgba(255,255,255,0.3)', letterSpacing: '0.08em', fontWeight: 700, transition: 'color 0.3s ease' }}>{label}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Output */}
+          <div className="panel-right" style={{ padding: '1.25rem 1.25rem 1rem', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.875rem', flexShrink: 0 }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 6px #10b981' }} />
+              <span style={{ fontSize: '9px', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.3)', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }}>
+                OUTPUT ANALYSIS
+              </span>
+            </div>
+
+            <AnimatePresence mode="wait">
+              {outputVisible && (
+                <motion.div
+                  key={outputSet}
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.35, ease: 'easeOut' }}
+                  style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', flexShrink: 0 }}
+                >
+                  {outputs.map((item, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: 16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.07, duration: 0.3 }}
+                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.55rem 0.75rem', background: `${item.color}08`, border: `1px solid ${item.color}22`, borderLeft: `2px solid ${item.color}`, borderRadius: '6px' }}
+                    >
+                      <span style={{ fontSize: '9.5px', letterSpacing: '0.12em', fontFamily: 'JetBrains Mono, monospace', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>{item.label}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: item.color, boxShadow: `0 0 6px ${item.color}` }} />
+                        <span style={{ fontSize: '11.5px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: item.color, letterSpacing: '0.06em' }}>{item.value}</span>
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
         </div>
 
-        <button
-          onClick={() => onLaunch('analyzer')}
-          style={{
-            background: 'transparent',
-            border: '1px solid rgba(139,92,246,0.4)',
-            color: '#a78bfa',
-            padding: '0.35rem 0.875rem',
-            borderRadius: '5px',
-            fontSize: '10px',
-            fontWeight: 700,
-            cursor: 'pointer',
-            fontFamily: 'JetBrains Mono, monospace',
-            letterSpacing: '0.1em',
-            display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
-            transition: 'all 0.15s ease',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(139,92,246,0.1)'; e.currentTarget.style.borderColor = 'rgba(139,92,246,0.7)'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(139,92,246,0.4)'; }}
-        >
-          LAUNCH ANALYZER <ArrowRight size={10} />
-        </button>
+        {/* BOTTOM STATUS BAR */}
+        <div className="control-status-bar">
+          <div className="status-items-group">
+            {[
+              { label: 'RECORDS', value: '416,809' },
+              { label: 'ENGINES', value: '6 ACTIVE' },
+              { label: 'ACCURACY', value: '90.6%' },
+              { label: 'LATENCY', value: '<100ms' },
+            ].map((s, i) => (
+              <div key={i} style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+                <span style={{ fontSize: '9px', color: 'rgba(255,255,255,0.25)', fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.1em' }}>{s.label}</span>
+                <span style={{ fontSize: '9.5px', color: '#a78bfa', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }}>{s.value}</span>
+              </div>
+            ))}
+          </div>
+
+          <button
+            onClick={() => onLaunch('analyzer')}
+            style={{ background: 'transparent', border: '1px solid rgba(139,92,246,0.4)', color: '#a78bfa', padding: '0.35rem 0.875rem', borderRadius: '5px', fontSize: '10px', fontWeight: 700, cursor: 'pointer', fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.1em', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', transition: 'all 0.15s ease' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(139,92,246,0.1)'; e.currentTarget.style.borderColor = 'rgba(139,92,246,0.7)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(139,92,246,0.4)'; }}
+          >
+            LAUNCH ANALYZER <ArrowRight size={10} />
+          </button>
+        </div>
+
       </div>
+
+      {/* ═══ SECTION 2: SCROLL DOWN FEATURES SHOWCASE ═══ */}
+      <section className="section-container">
+        
+        {/* Section Header */}
+        <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 3.5rem auto' }}>
+          <div style={{ fontSize: '10px', letterSpacing: '0.15em', color: '#a78bfa', fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase', fontWeight: 700, marginBottom: '0.75rem' }}>
+            // PARALLEL ENGINE CAPABILITIES
+          </div>
+          <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 800, fontFamily: 'Plus Jakarta Sans, sans-serif', color: '#ffffff', letterSpacing: '-0.03em', lineHeight: 1.15 }}>
+            6 Microservices Working in Parallel
+          </h2>
+          <p style={{ fontSize: '14.5px', color: 'rgba(255,255,255,0.45)', marginTop: '0.75rem', lineHeight: 1.6 }}>
+            Every raw text input is processed concurrently across 6 distinct Machine Learning models to deliver full multi-dimensional intelligence.
+          </p>
+        </div>
+
+        {/* Feature Cards Grid (6 Cards) */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem', marginBottom: '5rem' }}>
+          {FEATURES.map((f, i) => {
+            const Icon = f.icon;
+            return (
+              <div key={i} className="feature-card-sci">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.875rem' }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 8, background: `${f.color}15`, border: `1px solid ${f.color}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: f.color }}>
+                    <Icon size={18} />
+                  </div>
+                  <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#ffffff', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                    {f.title}
+                  </h3>
+                </div>
+                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>
+                  {f.desc}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* ═══ SECTION 3: SYSTEM ARCHITECTURE & DATAFLOW ═══ */}
+        <div style={{ background: 'rgba(10, 10, 10, 0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '2.5rem 2rem', marginBottom: '4rem' }}>
+          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+            <div style={{ fontSize: '10px', letterSpacing: '0.15em', color: '#06b6d4', fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase', fontWeight: 700, marginBottom: '0.5rem' }}>
+              // ARCHITECTURE & INFRASTRUCTURE
+            </div>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans, sans-serif', color: '#ffffff' }}>
+              Microservice Dataflow Pipeline
+            </h2>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
+            {PIPELINE_STEPS.map((s, i) => (
+              <div key={i} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, padding: '1.25rem' }}>
+                <span style={{ fontSize: '11px', fontFamily: 'JetBrains Mono, monospace', color: '#a78bfa', fontWeight: 700 }}>{s.step}</span>
+                <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff', marginTop: '0.35rem', marginBottom: '0.35rem' }}>{s.title}</h4>
+                <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ═══ SECTION 4: CALL TO ACTION BANNER ═══ */}
+        <div style={{ textAlign: 'center', background: 'linear-gradient(180deg, rgba(139,92,246,0.08) 0%, rgba(0,0,0,0) 100%)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 16, padding: '3.5rem 2rem' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans, sans-serif', color: '#ffffff', marginBottom: '0.75rem' }}>
+            Ready to test SENTINEL text intelligence?
+          </h2>
+          <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.5)', maxWidth: '540px', margin: '0 auto 2rem auto', lineHeight: 1.6 }}>
+            Run real-time multi-service predictions across sentiment, emotions, safety, and spam detection.
+          </p>
+          <button
+            onClick={() => onLaunch('analyzer')}
+            style={{ background: '#ffffff', border: 'none', color: '#000000', padding: '0.85rem 2.25rem', borderRadius: 8, fontSize: '14.5px', fontWeight: 700, fontFamily: 'Inter, sans-serif', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 0 24px rgba(139,92,246,0.3)', transition: 'all 0.15s ease' }}
+            onMouseEnter={e => e.currentTarget.style.opacity = '0.9'}
+            onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+          >
+            <Zap size={16} /> Open Analyzer App <ArrowRight size={15} />
+          </button>
+        </div>
+
+      </section>
+
+      {/* ═══ FOOTER ═══ */}
+      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '2rem 1.5rem', textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: '12px', fontFamily: 'JetBrains Mono, monospace' }}>
+        SENTINEL Multi-Service Text Intelligence Platform • Python Flask · Express API Gateway · MongoDB Atlas
+      </footer>
 
     </div>
   );
