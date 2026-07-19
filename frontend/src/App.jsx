@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutGrid, Zap, BarChart2 } from 'lucide-react';
+import { BarChart2, Zap, ArrowLeft, Home } from 'lucide-react';
 import axios from 'axios';
-import OverviewTab from './components/OverviewTab.jsx';
+import LandingPage from './components/LandingPage.jsx';
 import AnalyzerTab from './components/AnalyzerTab.jsx';
 import DashboardTab from './components/DashboardTab.jsx';
 import sentinelLogo from './assets/sentinel.png';
 import './index.css';
 
 const NAV_ITEMS = [
-  { id: 'overview',  label: 'Overview',  icon: LayoutGrid, desc: 'Platform Features' },
-  { id: 'analyzer',  label: 'Analyzer',  icon: Zap,        desc: 'Analyze Text'       },
-  { id: 'dashboard', label: 'Dashboard', icon: BarChart2,   desc: 'View Analytics'     },
+  { id: 'analyzer',  label: 'Analyzer',  icon: Zap,      desc: 'Analyze Text'    },
+  { id: 'dashboard', label: 'Dashboard', icon: BarChart2, desc: 'View Analytics'  },
 ];
 
 export default function App() {
-  const [tab, setTab]       = useState('overview');
+  const [view, setView]     = useState('landing'); // 'landing' or 'app'
+  const [tab, setTab]       = useState('analyzer'); // 'analyzer' or 'dashboard'
   const [health, setHealth] = useState({ flask: null, express: null });
 
   useEffect(() => {
@@ -38,12 +38,21 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+  const handleLaunch = (targetTab = 'analyzer') => {
+    setTab(targetTab);
+    setView('app');
+  };
+
+  if (view === 'landing') {
+    return <LandingPage onLaunch={handleLaunch} />;
+  }
+
   return (
     <div className="app-layout">
 
       {/* ── Desktop Sidebar ── */}
       <aside className="sidebar">
-        <div className="sidebar-logo" onClick={() => setTab('overview')} style={{ cursor: 'pointer' }}>
+        <div className="sidebar-logo" onClick={() => setView('landing')} title="Go to Home Landing Page" style={{ cursor: 'pointer' }}>
           <img src={sentinelLogo} alt="SENTINEL Logo" className="logo-img" />
           <div>
             <div className="logo-text">SENTINEL</div>
@@ -52,7 +61,16 @@ export default function App() {
         </div>
 
         <nav className="sidebar-nav">
-          <div className="nav-section-label">Platform</div>
+          <button
+            className="nav-item"
+            onClick={() => setView('landing')}
+            style={{ marginBottom: '0.5rem', color: 'var(--accent)' }}
+          >
+            <Home size={15} className="nav-icon" />
+            Landing Page
+          </button>
+
+          <div className="nav-section-label">Workspace</div>
           {NAV_ITEMS.map(item => {
             const Icon = item.icon;
             return (
@@ -87,15 +105,23 @@ export default function App() {
         {/* Top Bar */}
         <div className="top-bar">
           {/* Mobile Logo */}
-          <div className="mobile-logo" onClick={() => setTab('overview')}>
+          <div className="mobile-logo" onClick={() => setView('landing')}>
             <img src={sentinelLogo} alt="SENTINEL Logo" className="logo-img-mobile" />
             <span className="logo-text">SENTINEL</span>
           </div>
 
           <span className="top-bar-title">
             SENTINEL <span className="top-bar-sep">/</span>{' '}
-            <strong>{tab === 'overview' ? 'Overview' : tab === 'analyzer' ? 'Analyzer' : 'Dashboard'}</strong>
+            <strong>{tab === 'analyzer' ? 'Analyzer' : 'Dashboard'}</strong>
           </span>
+
+          <button
+            className="btn-ghost"
+            onClick={() => setView('landing')}
+            style={{ marginLeft: 'auto', padding: '0.35rem 0.75rem', fontSize: '11.5px' }}
+          >
+            <ArrowLeft size={13} /> Home Page
+          </button>
 
           {/* Mobile status dots */}
           <div className="mobile-status">
@@ -113,18 +139,7 @@ export default function App() {
         {/* Page Content */}
         <div className="page-content">
           <AnimatePresence mode="wait">
-            {tab === 'overview' && (
-              <motion.div
-                key="overview"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
-              >
-                <OverviewTab onNavigate={setTab} />
-              </motion.div>
-            )}
-            {tab === 'analyzer' && (
+            {tab === 'analyzer' ? (
               <motion.div
                 key="analyzer"
                 initial={{ opacity: 0, y: 12 }}
@@ -134,8 +149,7 @@ export default function App() {
               >
                 <AnalyzerTab />
               </motion.div>
-            )}
-            {tab === 'dashboard' && (
+            ) : (
               <motion.div
                 key="dashboard"
                 initial={{ opacity: 0, y: 12 }}
@@ -152,6 +166,13 @@ export default function App() {
 
       {/* ── Mobile Bottom Nav Bar ── */}
       <nav className="mobile-bottom-nav">
+        <button
+          className="mobile-nav-item"
+          onClick={() => setView('landing')}
+        >
+          <Home size={20} />
+          <span>Home</span>
+        </button>
         {NAV_ITEMS.map(item => {
           const Icon = item.icon;
           const active = tab === item.id;
