@@ -1,12 +1,11 @@
 <p align="center">
-  <img src="frontend/assets/sentinel.png" width="180" alt="SENTINEL Logo" />
+  <img src="frontend/assets/sentinel.png" width="100" alt="SENTINEL Logo" />
 </p>
 
 <h1 align="center">SENTINEL</h1>
 
 <p align="center">
-  <strong>Multi-Service Text Intelligence & Security Platform</strong><br>
-  <em>(<strong>S</strong>entiment, <strong>E</strong>motion & <strong>N</strong>etwork <strong>T</strong>hreat <strong>I</strong>ntelligence <strong>N</strong>LP <strong>E</strong>ngine for <strong>L</strong>anguage)</em>
+  <strong>Multi-Service Text Intelligence & Security Platform</strong>
 </p>
 
 <p align="center">
