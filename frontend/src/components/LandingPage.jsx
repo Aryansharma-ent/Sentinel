@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Smile, Zap, Shield, AlertOctagon, BookOpen, Tag } from 'lucide-react';
+import { ArrowRight, Smile, Zap, Shield, AlertOctagon, BookOpen, Tag, Sparkles } from 'lucide-react';
 import sentinelLogo from '../assets/sentinel.png';
 
 /* ─── Sample input text fragments cycling left panel ─── */
@@ -55,7 +55,7 @@ function EngineCore({ processing }) {
     <svg
       viewBox="0 0 300 300"
       width="100%"
-      style={{ maxWidth: 280, display: 'block', margin: '0 auto', overflow: 'visible' }}
+      style={{ maxWidth: 340, display: 'block', margin: '0 auto', overflow: 'visible' }}
     >
       <defs>
         <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
@@ -353,30 +353,46 @@ export default function LandingPage({ onLaunch }) {
         </div>
       </header>
 
-      {/* ═══ MAIN HEADLINE ═══ */}
+      {/* ═══ MAIN HEADLINE & INTRO ═══ */}
       <div style={{
         position: 'relative', zIndex: 5,
-        padding: '1.25rem 1.25rem 0.5rem',
+        padding: '1.25rem 1.5rem 0.5rem',
         flexShrink: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.4rem',
       }}>
         <h1 style={{
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
-          fontSize: 'clamp(1.35rem, 3.5vw, 2.25rem)',
+          fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', sans-serif",
+          fontSize: 'clamp(1.4rem, 3vw, 2.1rem)',
           fontWeight: 800,
           letterSpacing: '-0.03em',
-          color: '#fff',
+          color: '#ffffff',
           lineHeight: 1.1,
           margin: 0,
         }}>
           UNDERSTANDING LANGUAGE{' '}
           <span style={{
-            background: 'linear-gradient(90deg, #a78bfa, #38bdf8)',
+            background: 'linear-gradient(90deg, #a78bfa 0%, #38bdf8 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}>
             AT MACHINE SPEED
           </span>
         </h1>
+
+        <p style={{
+          fontSize: '13.5px',
+          fontWeight: 600,
+          color: 'rgba(255, 255, 255, 0.85)',
+          lineHeight: 1.5,
+          maxWidth: '680px',
+          margin: 0,
+          fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+          letterSpacing: '-0.01em',
+        }}>
+          Instantly transforms raw text streams into actionable predictions with full confidence scores.
+        </p>
       </div>
 
       {/* ═══ THREE-PANEL CONTROL ROOM ═══ */}
