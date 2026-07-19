@@ -190,6 +190,14 @@ export default function LandingPage({ onLaunch }) {
           overflow-x: hidden;
         }
 
+        .control-hero-section {
+          min-height: calc(100vh - 52px);
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
         .control-room-grid {
           flex: 1;
           display: grid;
