@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Zap, BarChart2, Smile, ShieldAlert, BookOpen, Tag, Cpu, Layers, Database, Users, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Zap, BarChart2, Smile, ShieldAlert, BookOpen, Tag, ArrowRight } from 'lucide-react';
 import sentinelLogo from '../assets/sentinel.png';
 
 const stagger = {
@@ -56,14 +56,6 @@ const ARCHITECTURE_STEPS = [
   { step: '02', title: 'Express Gateway', desc: 'Node.js orchestrates parallel Promise.all HTTP requests' },
   { step: '03', title: 'Python Microservice', desc: '4 Flask endpoints evaluate Scikit-Learn .pkl models' },
   { step: '04', title: 'MongoDB Storage', desc: 'Results saved & aggregated via $facet pipelines' }
-];
-
-const TEAM_ROLES = [
-  { name: 'Member 1', role: 'ML Lead', task: '6-Class Emotion & Sentiment Engine (train_emotion.py)' },
-  { name: 'Member 2', role: 'AI Security Lead', task: 'Toxicity & Spam Classifier (train_spam.py)' },
-  { name: 'Member 3', role: 'Backend Lead', task: 'Express API Gateway & Parallel Orchestration' },
-  { name: 'Member 4', role: 'Data Lead', task: 'MongoDB Schemas & Multi-Stage Aggregation' },
-  { name: 'Member 5', role: 'UI/UX Lead', task: 'React Vercel Theme & Chart.js Analytics' }
 ];
 
 export default function OverviewTab({ onNavigate }) {
@@ -125,7 +117,7 @@ export default function OverviewTab({ onNavigate }) {
       </motion.div>
 
       {/* Architecture Flow */}
-      <motion.div variants={fadeUp} className="card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
+      <motion.div variants={fadeUp} className="card" style={{ padding: '1.5rem' }}>
         <div className="page-eyebrow">System Design</div>
         <h2 style={{ fontSize: '1.25rem', fontWeight: '700', fontFamily: 'Plus Jakarta Sans, sans-serif', marginBottom: '1.25rem' }}>
           Microservice Dataflow Architecture
@@ -137,29 +129,6 @@ export default function OverviewTab({ onNavigate }) {
               <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--accent)', fontWeight: '700' }}>{s.step}</span>
               <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)', marginTop: '0.25rem', marginBottom: '0.25rem' }}>{s.title}</div>
               <div style={{ fontSize: '11.5px', color: 'var(--text-tertiary)', lineHeight: 1.4 }}>{s.desc}</div>
-            </div>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* 5-Member Engineering Team Division */}
-      <motion.div variants={fadeUp} className="card" style={{ padding: '1.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-          <Users size={16} style={{ color: 'var(--accent)' }} />
-          <div className="page-eyebrow" style={{ marginBottom: 0 }}>Team Engineering Roles</div>
-        </div>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: '700', fontFamily: 'Plus Jakarta Sans, sans-serif', marginBottom: '1.25rem' }}>
-          5-Member Capstone Division of Labor
-        </h2>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
-          {TEAM_ROLES.map((t, i) => (
-            <div key={i} style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)', padding: '0.875rem 1rem', borderRadius: 'var(--radius-md)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
-                <strong style={{ fontSize: '12px', color: 'var(--text-primary)' }}>{t.name}</strong>
-                <span className="badge badge-neutral" style={{ fontSize: '10px', padding: '0.1rem 0.4rem' }}>{t.role}</span>
-              </div>
-              <p style={{ fontSize: '11px', color: 'var(--text-tertiary)', lineHeight: 1.4 }}>{t.task}</p>
             </div>
           ))}
         </div>
