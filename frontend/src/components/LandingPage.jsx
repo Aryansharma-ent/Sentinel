@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Smile, Zap, Shield, AlertOctagon, BookOpen, Tag } from 'lucide-react';
 import sentinelLogo from '../assets/sentinel.png';
 
 /* ─── Sample input text fragments cycling left panel ─── */
@@ -466,6 +466,7 @@ export default function LandingPage({ onLaunch }) {
           padding: '1.25rem 1.25rem 1rem',
           display: 'flex', flexDirection: 'column',
           position: 'relative',
+          minHeight: '260px',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.875rem', flexShrink: 0 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 6px #10b981' }} />
@@ -474,45 +475,47 @@ export default function LandingPage({ onLaunch }) {
             </span>
           </div>
 
-          <AnimatePresence mode="wait">
-            {outputVisible && (
-              <motion.div
-                key={outputSet}
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.35, ease: 'easeOut' }}
-                style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', flexShrink: 0 }}
-              >
-                {outputs.map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: 16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.07, duration: 0.3 }}
-                    style={{
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      padding: '0.55rem 0.75rem',
-                      background: `${item.color}08`,
-                      border: `1px solid ${item.color}22`,
-                      borderLeft: `2px solid ${item.color}`,
-                      borderRadius: '6px',
-                    }}
-                  >
-                    <span style={{ fontSize: '9.5px', letterSpacing: '0.12em', fontFamily: 'JetBrains Mono, monospace', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>
-                      {item.label}
-                    </span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <div style={{ width: 5, height: 5, borderRadius: '50%', background: item.color, boxShadow: `0 0 6px ${item.color}` }} />
-                      <span style={{ fontSize: '11.5px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: item.color, letterSpacing: '0.06em' }}>
-                        {item.value}
+          <div style={{ height: '215px', minHeight: '215px', position: 'relative', overflow: 'hidden' }}>
+            <AnimatePresence mode="wait">
+              {outputVisible && (
+                <motion.div
+                  key={outputSet}
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  style={{ position: 'absolute', top: 0, left: 0, right: 0, display: 'flex', flexDirection: 'column', gap: '0.45rem' }}
+                >
+                  {outputs.map((item, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: 16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.05, duration: 0.2 }}
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        padding: '0.55rem 0.75rem',
+                        background: `${item.color}08`,
+                        border: `1px solid ${item.color}22`,
+                        borderLeft: `2px solid ${item.color}`,
+                        borderRadius: '6px',
+                      }}
+                    >
+                      <span style={{ fontSize: '9.5px', letterSpacing: '0.12em', fontFamily: 'JetBrains Mono, monospace', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>
+                        {item.label}
                       </span>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: item.color, boxShadow: `0 0 6px ${item.color}` }} />
+                        <span style={{ fontSize: '11.5px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: item.color, letterSpacing: '0.06em' }}>
+                          {item.value}
+                        </span>
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
       </div>
@@ -555,6 +558,146 @@ export default function LandingPage({ onLaunch }) {
           LAUNCH ANALYZER <ArrowRight size={10} />
         </button>
       </div>
+
+      {/* ═══ SECTION 2: SCROLL DOWN FEATURES SHOWCASE ═══ */}
+      <section style={{ maxWidth: '1100px', margin: '0 auto', padding: '5rem 1.5rem', position: 'relative', zIndex: 5 }}>
+        
+        {/* Section Header */}
+        <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 3.5rem auto' }}>
+          <div style={{ fontSize: '10px', letterSpacing: '0.15em', color: '#a78bfa', fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase', fontWeight: 700, marginBottom: '0.75rem' }}>
+            // PARALLEL ENGINE CAPABILITIES
+          </div>
+          <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 800, fontFamily: "'Plus Jakarta Sans', sans-serif", color: '#ffffff', letterSpacing: '-0.03em', lineHeight: 1.15 }}>
+            6 Microservices Working in Parallel
+          </h2>
+          <p style={{ fontSize: '14.5px', color: 'rgba(255,255,255,0.45)', marginTop: '0.75rem', lineHeight: 1.6 }}>
+            Every raw text input is processed concurrently across 6 distinct Machine Learning models to deliver full multi-dimensional intelligence.
+          </p>
+        </div>
+
+        {/* Feature Cards Grid (Clean Monochrome SaaS with Hollow White Outline Icons) */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem', marginBottom: '5rem' }}>
+          {[
+            {
+              icon: Smile,
+              tag: '416K DATASET',
+              title: '6-Class Emotion Engine',
+              desc: 'Multi-class Logistic Regression trained on 416,809 records. Evaluates Joy, Sadness, Anger, Fear, Love, and Surprise with full Softmax confidence probability distributions.'
+            },
+            {
+              icon: Zap,
+              tag: '50K IMDB · TF-IDF',
+              title: 'N-Gram Sentiment Classifier',
+              desc: 'TF-IDF (1,2) N-gram model trained on 50,000 IMDB movie reviews achieving 89.67% accuracy for ultra-fast binary positive and negative classification.'
+            },
+            {
+              icon: Shield,
+              tag: 'REAL-TIME MODERATION',
+              title: 'Toxicity & Threat Guard',
+              desc: 'Real-time moderation engine that scans text for insults, profanity, harassment patterns, and offensive speech to protect digital communities.'
+            },
+            {
+              icon: AlertOctagon,
+              tag: 'HYBRID REGEX + ML',
+              title: 'Spam & Phishing Detector',
+              desc: 'Hybrid pattern-matching and ML pipeline identifying scam presets, phishing URLs, malicious links, and suspicious text patterns.'
+            },
+            {
+              icon: BookOpen,
+              tag: 'FLESCH-KINCAID INDEX',
+              title: 'Readability & Grade Assessor',
+              desc: 'Calculates Flesch-Kincaid reading ease scores, grade level difficulty, word density, and sentence complexity metrics.'
+            },
+            {
+              icon: Tag,
+              tag: 'NLP MINING ENGINE',
+              title: 'Key Term Extraction',
+              desc: 'Server-side NLP keyword mining engine that strips stop-words and isolates dominant descriptive concepts from raw text.'
+            }
+          ].map((f, i) => {
+            const Icon = f.icon;
+            return (
+              <div key={i} style={{
+                background: 'rgba(10, 10, 10, 0.9)',
+                border: '1px solid rgba(255, 255, 255, 0.07)',
+                borderRadius: '12px',
+                padding: '1.5rem',
+                position: 'relative',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'; e.currentTarget.style.background = 'rgba(14, 14, 14, 0.95)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.07)'; e.currentTarget.style.background = 'rgba(10, 10, 10, 0.9)'; }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                  <div style={{ width: 34, height: 34, borderRadius: 8, background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Icon size={17} strokeWidth={1.75} style={{ color: 'rgba(255, 255, 255, 0.85)' }} />
+                  </div>
+                  <span style={{ fontSize: '9px', fontFamily: 'JetBrains Mono, monospace', color: 'rgba(255, 255, 255, 0.5)', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.07)', padding: '0.2rem 0.5rem', borderRadius: 4, fontWeight: 600, letterSpacing: '0.08em' }}>
+                    {f.tag}
+                  </span>
+                </div>
+                <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#ffffff', fontFamily: "'Plus Jakarta Sans', sans-serif", marginBottom: '0.5rem', letterSpacing: '-0.01em' }}>
+                  {f.title}
+                </h3>
+                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>
+                  {f.desc}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* ═══ SECTION 3: SYSTEM ARCHITECTURE & DATAFLOW ═══ */}
+        <div style={{ background: 'rgba(10, 10, 10, 0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '2.5rem 2rem', marginBottom: '4rem' }}>
+          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+            <div style={{ fontSize: '10px', letterSpacing: '0.15em', color: '#06b6d4', fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase', fontWeight: 700, marginBottom: '0.5rem' }}>
+              // ARCHITECTURE & INFRASTRUCTURE
+            </div>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, fontFamily: "'Plus Jakarta Sans', sans-serif", color: '#ffffff' }}>
+              Microservice Dataflow Pipeline
+            </h2>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
+            {[
+              { step: '01', title: 'React Client SPA', desc: 'Vite-powered single page interface with Framer Motion animations' },
+              { step: '02', title: 'Express Gateway', desc: 'Node.js backend orchestrates parallel Promise.all HTTP microservices' },
+              { step: '03', title: 'Python Flask ML', desc: '4 Flask endpoints evaluate Scikit-Learn .pkl models in parallel' },
+              { step: '04', title: 'MongoDB Atlas', desc: 'Persists evaluations and runs multi-stage $facet aggregation pipelines' }
+            ].map((s, i) => (
+              <div key={i} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, padding: '1.25rem' }}>
+                <span style={{ fontSize: '11px', fontFamily: 'JetBrains Mono, monospace', color: '#a78bfa', fontWeight: 700 }}>{s.step}</span>
+                <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff', marginTop: '0.35rem', marginBottom: '0.35rem' }}>{s.title}</h4>
+                <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ═══ SECTION 4: CALL TO ACTION BANNER ═══ */}
+        <div style={{ textAlign: 'center', background: 'linear-gradient(180deg, rgba(139,92,246,0.08) 0%, rgba(0,0,0,0) 100%)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 16, padding: '3.5rem 2rem' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 800, fontFamily: "'Plus Jakarta Sans', sans-serif", color: '#ffffff', marginBottom: '0.75rem' }}>
+            Ready to test SENTINEL text intelligence?
+          </h2>
+          <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.5)', maxWidth: '540px', margin: '0 auto 2rem auto', lineHeight: 1.6 }}>
+            Run real-time multi-service predictions across sentiment, emotions, safety, and spam detection.
+          </p>
+          <button
+            onClick={() => onLaunch('analyzer')}
+            style={{ background: '#ffffff', border: 'none', color: '#000000', padding: '0.85rem 2.25rem', borderRadius: 8, fontSize: '14.5px', fontWeight: 700, fontFamily: 'Inter, sans-serif', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 0 24px rgba(139,92,246,0.3)', transition: 'all 0.15s ease' }}
+            onMouseEnter={e => e.currentTarget.style.opacity = '0.9'}
+            onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+          >
+            <ArrowRight size={16} /> Open Analyzer App
+          </button>
+        </div>
+
+      </section>
+
+      {/* ═══ FOOTER ═══ */}
+      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '2rem 1.5rem', textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: '12px', fontFamily: 'JetBrains Mono, monospace' }}>
+        SENTINEL Multi-Service Text Intelligence Platform • Python Flask · Express API Gateway · MongoDB Atlas
+      </footer>
 
     </div>
   );
