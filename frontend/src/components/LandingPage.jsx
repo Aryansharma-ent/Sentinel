@@ -500,7 +500,7 @@ export default function LandingPage({ onLaunch }) {
           </div>
 
           {/* Right Output */}
-          <div className="panel-right" style={{ padding: '1.25rem 1.25rem 1rem', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+          <div className="panel-right" style={{ padding: '1.25rem 1.25rem 1rem', display: 'flex', flexDirection: 'column', position: 'relative', minHeight: '250px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.875rem', flexShrink: 0 }}>
               <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 6px #10b981' }} />
               <span style={{ fontSize: '9px', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.3)', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700 }}>
@@ -508,34 +508,36 @@ export default function LandingPage({ onLaunch }) {
               </span>
             </div>
 
-            <AnimatePresence mode="wait">
-              {outputVisible && (
-                <motion.div
-                  key={outputSet}
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  transition={{ duration: 0.35, ease: 'easeOut' }}
-                  style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', flexShrink: 0 }}
-                >
-                  {outputs.map((item, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: 16 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.07, duration: 0.3 }}
-                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.55rem 0.75rem', background: `${item.color}08`, border: `1px solid ${item.color}22`, borderLeft: `2px solid ${item.color}`, borderRadius: '6px' }}
-                    >
-                      <span style={{ fontSize: '9.5px', letterSpacing: '0.12em', fontFamily: 'JetBrains Mono, monospace', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>{item.label}</span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: item.color, boxShadow: `0 0 6px ${item.color}` }} />
-                        <span style={{ fontSize: '11.5px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: item.color, letterSpacing: '0.06em' }}>{item.value}</span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <div style={{ minHeight: '205px', position: 'relative' }}>
+              <AnimatePresence mode="wait">
+                {outputVisible && (
+                  <motion.div
+                    key={outputSet}
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    transition={{ duration: 0.25, ease: 'easeOut' }}
+                    style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', position: 'absolute', top: 0, left: 0, right: 0 }}
+                  >
+                    {outputs.map((item, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, x: 16 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.05, duration: 0.2 }}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.55rem 0.75rem', background: `${item.color}08`, border: `1px solid ${item.color}22`, borderLeft: `2px solid ${item.color}`, borderRadius: '6px' }}
+                      >
+                        <span style={{ fontSize: '9.5px', letterSpacing: '0.12em', fontFamily: 'JetBrains Mono, monospace', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>{item.label}</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                          <div style={{ width: 5, height: 5, borderRadius: '50%', background: item.color, boxShadow: `0 0 6px ${item.color}` }} />
+                          <span style={{ fontSize: '11.5px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, color: item.color, letterSpacing: '0.06em' }}>{item.value}</span>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
         </div>
