@@ -353,14 +353,11 @@ export default function LandingPage({ onLaunch }) {
         </div>
       </header>
 
-      {/* ═══ MAIN HEADLINE & INTRO ═══ */}
+      {/* ═══ MAIN HEADLINE ═══ */}
       <div style={{
         position: 'relative', zIndex: 5,
         padding: '1.25rem 1.5rem 0.5rem',
         flexShrink: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.4rem',
       }}>
         <h1 style={{
           fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', sans-serif",
@@ -380,19 +377,6 @@ export default function LandingPage({ onLaunch }) {
             AT MACHINE SPEED
           </span>
         </h1>
-
-        <p style={{
-          fontSize: '13.5px',
-          fontWeight: 600,
-          color: 'rgba(255, 255, 255, 0.85)',
-          lineHeight: 1.5,
-          maxWidth: '680px',
-          margin: 0,
-          fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
-          letterSpacing: '-0.01em',
-        }}>
-          Instantly transforms raw text streams into actionable predictions with full confidence scores.
-        </p>
       </div>
 
       {/* ═══ THREE-PANEL CONTROL ROOM ═══ */}
@@ -585,7 +569,7 @@ export default function LandingPage({ onLaunch }) {
 
       {/* ═══ SECTION 2: SCROLL DOWN FEATURES SHOWCASE ═══ */}
       <section style={{ maxWidth: '1100px', margin: '0 auto', padding: '5rem 1.5rem', position: 'relative', zIndex: 5 }}>
-        
+
         {/* Section Header */}
         <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 3.5rem auto' }}>
           <div style={{ fontSize: '10px', letterSpacing: '0.15em', color: '#a78bfa', fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase', fontWeight: 700, marginBottom: '0.75rem' }}>
