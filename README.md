@@ -1,68 +1,170 @@
-# Text Intelligence Platform ⚡ (Capstone 5-Member Team Edition)
+<p align="center">
+  <img src="frontend/assets/sentinel.png" width="100" alt="SENTINEL Logo" />
+</p>
 
-An enterprise-grade monorepo project featuring **6-in-1 Parallel AI Microservices**, MERN Stack Architecture (MongoDB, Express, React, Node), and 5 dedicated team modules.
+<h1 align="center">SENTINEL</h1>
 
----
+<p align="center">
+  <strong>Multi-Service Text Intelligence & Security Platform</strong>
+</p>
 
-## 👥 5-Member Team Module Division & Ownership
-
-```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                                 MERN STACK MONOREPO                                    │
-└──────┬───────────────────┬───────────────────┬───────────────────┬─────────────────────┘
-       │                   │                   │                   │
-       ▼                   ▼                   ▼                   ▼
-┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
-│   MEMBER 1    │   │   MEMBER 2    │   │   MEMBER 3    │   │   MEMBER 4    │   │   MEMBER 5    │
-│ Emotion Engine│   │ Spam Detector │   │ Readability   │   │ Express MVC   │   │ React UI/UX   │
-│   (Python)    │   │   (Python)    │   │   (Python)    │   │   Gateway     │   │ & Dashboards  │
-└───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘
-```
-
-| Member | Assigned Module | Key Files Owned | Viva Presentation Topic |
-|---|---|---|---|
-| **Member 1** | **6-Class Emotion Recognition Engine** | `train_emotion.py`, `emotion_model.pkl` | Multi-class classification using 5,937 dataset records (`Emotion_classify_Data.csv`) |
-| **Member 2** | **Spam & Phishing Risk Detector** | `train_spam.py`, `spam_model.pkl` | Security text classification identifying scams and phishing URLs |
-| **Member 3** | **Readability & Complexity Calculator** | `app.py` (`/analyze/readability`) | Flesch-Kincaid grade level index calculation and word tokenization |
-| **Member 4** | **Express MVC API Gateway** | `backend/server.js`, `flaskService.js`, `Review.js` | 6-in-1 parallel microservice calls using `Promise.all` and MongoDB `$facet` aggregation |
-| **Member 5** | **React Component UI & Analytics** | `frontend/src/components/` | Responsive glassmorphic UI, Chart.js Doughnut visualizers, and interactive state management |
+<p align="center">
+  A distributed microservice architecture for real-time natural language evaluation, emotion recognition, toxicity detection, spam filtering, and readability scoring.
+</p>
 
 ---
 
-## 🚀 How to Run the Project
+## Overview
 
-### 1. Start Python Flask AI Microservice (Terminal 1)
+SENTINEL is an enterprise-grade NLP platform designed to evaluate unstructured text across six distinct analytical dimensions simultaneously. Built with a polyglot microservice pattern, the platform orchestrates parallel machine learning inferences in Python, serving processed results through a Node.js Express API gateway backed by MongoDB Atlas.
+
+### Key Capabilities
+
+* **6-Class Emotion Recognition**: Predicts joy, sadness, anger, fear, love, and surprise with complete Softmax confidence probability distributions, trained on 416,809 real-world records.
+* **N-Gram Sentiment Analysis**: Binary positive and negative classification using TF-IDF (1,2) n-grams trained on 50,000 IMDB movie reviews (89.67% test accuracy).
+* **Toxicity & Threat Detection**: Real-time moderation scanning for offensive language, profanity, and harassment patterns.
+* **Spam & Phishing Scanner**: Hybrid regex pattern matching and ML inference for detecting scam presets and malicious URLs.
+* **Readability Index**: Automated Flesch-Kincaid reading ease score and grade-level difficulty metrics.
+* **Key Term Extraction**: Server-side keyword mining with stop-word filtration.
+
+---
+
+## System Architecture
+
+SENTINEL follows a clean microservice architecture separating machine learning evaluation, API orchestration, data persistence, and user interface layers.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    React SPA (Vite + Chart.js)                  │
+└────────────────────────────────┬────────────────────────────────┘
+                                 │ HTTP / REST
+                                 ▼
+┌─────────────────────────────────────────────────────────────────┐
+│               Express.js API Gateway (Node.js)                   │
+└───────────────┬─────────────────────────────────┬───────────────┘
+                │ Async Promise.all               │ Mongoose
+                ▼                                 ▼
+┌───────────────────────────────┐ ┌───────────────────────────────┐
+│   Flask ML Microservices      │ │    MongoDB Atlas Database     │
+│   (Scikit-Learn / Gunicorn)   │ │  ($facet Aggregation Pipeline)│
+└───────────────────────────────┘ └───────────────────────────────┘
+```
+
+### Component Breakdown
+
+1. **Python ML Engine (`python_ml/`)**:
+   * Multi-endpoint Flask service serving pre-trained Scikit-Learn `.pkl` models.
+   * `train_emotion.py`: Fits TF-IDF vectorizer + Logistic Regression on 416K tweet dataset.
+   * `train_sentiment.py`: Fits TF-IDF (1,2) vectorizer + Logistic Regression on 50K IMDB reviews.
+
+2. **API Gateway (`backend/`)**:
+   * Node.js / Express server managing incoming client payloads.
+   * Dispatches parallel `Promise.all` HTTP calls to the Flask ML service to eliminate serial latency.
+   * Computes server-side key term frequencies and persists analysis records into MongoDB.
+   * Runs MongoDB multi-stage `$facet` aggregation pipelines for real-time analytics.
+
+3. **Frontend Application (`frontend/`)**:
+   * React SPA built with Vite, Framer Motion, and Chart.js.
+   * Features a sci-fi control room hero visualization, interactive analyzer workspace, and real-time analytics dashboard.
+
+---
+
+## API Specification
+
+### Analysis Endpoint
+
+```http
+POST /api/analyze
+Content-Type: application/json
+
+{
+  "text": "The delivery was surprisingly fast and the customer support was extremely helpful."
+}
+```
+
+#### Response Structure
+
+```json
+{
+  "success": true,
+  "data": {
+    "text": "The delivery was surprisingly fast...",
+    "sentiment": "positive",
+    "sentimentConfidence": 0.94,
+    "emotion": "joy",
+    "emotionConfidence": 0.86,
+    "emotionScores": {
+      "joy": 0.86,
+      "surprise": 0.08,
+      "sadness": 0.02,
+      "anger": 0.02,
+      "fear": 0.01,
+      "love": 0.01
+    },
+    "toxic": false,
+    "toxicityConfidence": 0.95,
+    "isSpam": false,
+    "spamConfidence": 0.98,
+    "readability": {
+      "wordCount": 11,
+      "readingEase": 68.5,
+      "gradeLevel": "Standard (8th-9th Grade)"
+    },
+    "keywords": ["delivery", "fast", "customer", "support", "helpful"]
+  }
+}
+```
+
+### Analytics Endpoint
+
+```http
+GET /api/stats
+```
+
+Returns total submission counts, positive vs. negative ratios, emotion distributions, safety metrics, and top extracted keywords computed via MongoDB `$facet` aggregation.
+
+---
+
+## Local Development Setup
+
+### Prerequisites
+
+* Node.js (v18+)
+* Python (v3.9+)
+* MongoDB (Local or Atlas connection URI)
+
+### 1. Python ML Microservice
+
 ```bash
 cd python_ml
+pip install -r requirements.txt
 python app.py
 ```
-> Running on `http://127.0.0.1:5001` with 6 loaded endpoints!
+*Service runs on `http://127.0.0.1:5001`*
 
-### 2. Start Express Backend (Terminal 2)
+### 2. Express Backend API Gateway
+
 ```bash
 cd backend
+npm install
 npm start
 ```
-> Running on `http://localhost:5000`
+*Gateway runs on `http://localhost:5000`*
 
-### 3. Open Browser
-Go to: **`http://localhost:5000`**
+### 3. Frontend Web Application
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+*Application runs on `http://localhost:5173` (or served via Express at `http://localhost:5000`)*
 
 ---
 
-## 🎓 5-Member Viva Defense Script
+## Deployment
 
-### Member 1 (Emotion Engine):
-> *"I developed the 6-Class Emotion Recognition Engine trained on 5,937 labeled comment records. Using TF-IDF vectorization and Multinomial Logistic Regression, it predicts emotions like Joy, Anger, Fear, Sadness, Surprise, and Love with 93.35% accuracy."*
+The platform is configured for multi-service cloud deployment:
 
-### Member 2 (Spam & Phishing Detector):
-> *"I implemented the Spam & Phishing Detection microservice. It analyzes incoming text for phishing URLs, scam patterns, and commercial spam using TF-IDF features and Naive Bayes probability heuristics."*
-
-### Member 3 (Readability Calculator):
-> *"I built the Readability & Text Complexity Engine. It calculates Flesch Reading Ease scores and assigns grade-level complexity rankings (e.g. Easy, Standard, Advanced) based on sentence length and syllable ratios."*
-
-### Member 4 (Express Gateway & MongoDB):
-> *"I engineered the Express.js MVC API Gateway. Using `Promise.all`, Express triggers 6 microservices concurrently in parallel. I also designed the Mongoose Schema and MongoDB `$facet` aggregation pipeline for analytics."*
-
-### Member 5 (React Frontend & Visualizers):
-> *"I built the React SPA UI using Vite, Lucide Icons, and Chart.js. It presents live system status health indicators, 6 AI report cards, and interactive Doughnut charts for sentiment, toxicity, and emotion metrics."*
+* **Python ML Microservice**: Deployed as a Python Web Service using `gunicorn app:app`.
+* **Express Gateway & SPA**: Deployed as a Node Web Service running `node server.js` with `frontend/dist` static file serving.
