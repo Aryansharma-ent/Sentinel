@@ -84,20 +84,20 @@ export function jsFallbackAnalysis(text) {
   const gradeLevel = Math.max(1, Math.round(0.39 * (wordCount / 1) + 11.8 * (syllables / wordCount) - 15.59));
 
   return {
-    sentiment,
+    sentiment: sentiment.toLowerCase(),
     sentimentConfidence,
-    toxic: isToxic ? 'TOXIC' : 'SAFE',
+    toxic: isToxic,
     toxicityConfidence: isToxic ? 0.94 : 0.97,
-    emotion,
+    emotion: emotion.toLowerCase(),
     emotionConfidence,
     emotionScores,
-    isSpam: isSpam ? 'SPAM' : 'LEGIT',
+    isSpam: isSpam,
     spamConfidence: isSpam ? 0.95 : 0.92,
     keywords: keywords.length ? keywords : ['text', 'analysis'],
     wordCount,
     charCount,
     readingEase,
-    gradeLevel
+    gradeLevel: `${gradeLevel}.0`
   };
 }
 
@@ -131,21 +131,27 @@ export const analyzeTextWithFlask = async (text) => {
       axios.post(`${remoteUrl}/analyze/readability`, { text }, axiosConfig)
     ]);
 
+    const rawSent = (sentimentRes.data.sentiment || 'positive').toLowerCase();
+    const rawTox = toxicityRes.data.toxic;
+    const isToxicBool = typeof rawTox === 'boolean' ? rawTox : (rawTox === 'TOXIC' || rawTox === 'toxic' || rawTox === true);
+    const rawSpam = spamRes.data.isSpam;
+    const isSpamBool = typeof rawSpam === 'boolean' ? rawSpam : (rawSpam === 'SPAM' || rawSpam === 'spam' || rawSpam === true);
+
     return {
-      sentiment: sentimentRes.data.sentiment,
+      sentiment: rawSent,
       sentimentConfidence: sentimentRes.data.confidence,
-      toxic: toxicityRes.data.toxic,
+      toxic: isToxicBool,
       toxicityConfidence: toxicityRes.data.confidence,
-      emotion: emotionRes.data.emotion,
+      emotion: (emotionRes.data.emotion || 'joy').toLowerCase(),
       emotionConfidence: emotionRes.data.confidence,
       emotionScores: emotionRes.data.scores,
-      isSpam: spamRes.data.isSpam,
+      isSpam: isSpamBool,
       spamConfidence: spamRes.data.confidence,
       keywords: keywordsRes.data.keywords,
       wordCount: readabilityRes.data.wordCount,
       charCount: readabilityRes.data.charCount,
       readingEase: readabilityRes.data.readingEase,
-      gradeLevel: readabilityRes.data.gradeLevel
+      gradeLevel: String(readabilityRes.data.gradeLevel || '8.0')
     };
   } catch (error) {
     console.warn(`[flaskService] Microservice error (${error.message}). Executing JS Engine fallback.`);
