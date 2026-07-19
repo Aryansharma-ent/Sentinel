@@ -83,8 +83,18 @@ function jsFallbackAnalysis(text) {
  * Service executing parallel HTTP requests with automatic JS fallback
  */
 export const analyzeTextWithFlask = async (text) => {
+  // 1. Instant fallback on cloud environments (e.g. Render) if no remote FLASK_SERVICE_URL is set
+  const isLocalDefault = !process.env.FLASK_SERVICE_URL || process.env.FLASK_SERVICE_URL.includes('127.0.0.1') || process.env.FLASK_SERVICE_URL.includes('localhost');
+  const isCloudProduction = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
+
+  if (isCloudProduction && isLocalDefault) {
+    console.log(`[flaskService] Cloud environment without remote FLASK_SERVICE_URL. Executing instant JS Engine fallback.`);
+    return jsFallbackAnalysis(text);
+  }
+
+  // 2. Try calling remote Flask microservice with 3s timeout
   try {
-    const axiosConfig = { timeout: 4000 };
+    const axiosConfig = { timeout: 3000 };
     const [
       sentimentRes,
       toxicityRes,
@@ -118,7 +128,7 @@ export const analyzeTextWithFlask = async (text) => {
       gradeLevel: readabilityRes.data.gradeLevel
     };
   } catch (error) {
-    console.warn(`[flaskService] Python Flask microservice un-available (${error.message}). Using JS Engine Fallback.`);
+    console.warn(`[flaskService] Flask microservice unreachable (${error.message}). Executing JS Engine fallback.`);
     return jsFallbackAnalysis(text);
   }
 };
