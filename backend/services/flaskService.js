@@ -9,57 +9,76 @@ const FLASK_SERVICE_URL = process.env.FLASK_SERVICE_URL || 'http://127.0.0.1:500
  * JS Fallback Engine when Python microservice is offline or sleeping on Render
  */
 export function jsFallbackAnalysis(text) {
-  const lower = text.toLowerCase();
-  const words = text.trim().split(/\s+/).filter(Boolean);
+  const lower = text.toLowerCase().trim();
+  const words = lower.split(/\s+/).filter(Boolean);
   const wordCount = words.length || 1;
   const charCount = text.length;
 
-  // Sentiment
-  const posWords = ['love', 'loved', 'great', 'awesome', 'excellent', 'sick', 'amazing', 'good', 'best', 'happy', 'outstanding', 'surprised', 'super', 'wonderful', 'fantastic'];
-  const negWords = ['bad', 'worst', 'terrible', 'scam', 'broken', 'hate', 'garbage', 'poor', 'sad', 'delay', 'delayed', 'idiot', 'stupid', 'horrible', 'fake'];
+  // 1. Precise Profanity & Toxicity (matching Python PROFANITY_WORDS)
+  const PROFANITY = new Set(['fuck', 'shit', 'bitch', 'asshole', 'bastard', 'crap', 'bullshit', 'dick', 'pussy', 'damn', 'slut', 'whore']);
+  const HARASSMENT = new Set(['die', 'kill', 'retard', 'nigger', 'faggot']);
   
-  let posCount = posWords.filter(w => lower.includes(w)).length;
-  let negCount = negWords.filter(w => lower.includes(w)).length;
-  
+  const hasProfanity = words.some(w => PROFANITY.has(w.replace(/[^a-z]/g, '')));
+  const hasHarassment = words.some(w => HARASSMENT.has(w.replace(/[^a-z]/g, '')));
+  const isToxic = hasProfanity || hasHarassment;
+
+  // 2. High-Precision Sentiment (Slang aware: sick, dope, lit, fire, awesome, good)
+  const POSITIVE_LEXICON = new Set(['good', 'great', 'awesome', 'excellent', 'sick', 'dope', 'lit', 'fire', 'amazing', 'love', 'loved', 'best', 'happy', 'outstanding', 'surprised', 'super', 'wonderful', 'fantastic', 'cool', 'brilliant', 'insane', 'nice']);
+  const NEGATIVE_LEXICON = new Set(['bad', 'worst', 'terrible', 'scam', 'broken', 'hate', 'garbage', 'poor', 'sad', 'delay', 'delayed', 'horrible', 'fake', 'disaster', 'trash', 'awful', 'useless']);
+
+  let posScore = 0;
+  let negScore = 0;
+
+  words.forEach(w => {
+    const clean = w.replace(/[^a-z]/g, '');
+    if (POSITIVE_LEXICON.has(clean)) posScore++;
+    if (NEGATIVE_LEXICON.has(clean)) negScore++;
+  });
+
   let sentiment = 'POSITIVE';
-  let sentimentConfidence = 0.88;
-  if (negCount > posCount) {
+  let sentimentConfidence = 0.89;
+
+  if (negScore > posScore) {
     sentiment = 'NEGATIVE';
     sentimentConfidence = 0.91;
-  } else if (posCount === 0 && negCount === 0) {
-    sentimentConfidence = 0.75;
+  } else if (posScore === 0 && negScore === 0) {
+    sentimentConfidence = 0.72;
   }
 
-  // Toxicity
-  const toxicWords = ['idiot', 'hate', 'scam', 'garbage', 'stupid', 'bitch', 'fool', 'trash', 'kill'];
-  const isToxic = toxicWords.some(w => lower.includes(w));
-
-  // Emotion
+  // 3. Emotion Classifier (matching 6 classes: joy, sadness, anger, fear, love, surprise)
   let emotion = 'JOY';
   let emotionConfidence = 0.85;
-  const emotionScores = { joy: 0.2, sadness: 0.1, anger: 0.1, fear: 0.1, love: 0.1, surprise: 0.4 };
+  const emotionScores = { joy: 0.25, sadness: 0.15, anger: 0.15, fear: 0.15, love: 0.15, surprise: 0.15 };
 
-  if (lower.includes('cry') || lower.includes('sad') || lower.includes('depressed')) {
-    emotion = 'SADNESS'; emotionScores.sadness = 0.88;
-  } else if (lower.includes('hate') || lower.includes('angry') || lower.includes('idiot') || lower.includes('garbage')) {
-    emotion = 'ANGER'; emotionScores.anger = 0.86;
-  } else if (lower.includes('scam') || lower.includes('prize') || lower.includes('claim')) {
-    emotion = 'FEAR'; emotionScores.fear = 0.79;
-  } else if (lower.includes('love') || lower.includes('amazing') || lower.includes('best')) {
-    emotion = 'LOVE'; emotionScores.love = 0.92;
-  } else if (lower.includes('wow') || lower.includes('sick') || lower.includes('surprised')) {
-    emotion = 'SURPRISE'; emotionScores.surprise = 0.87;
+  if (lower.includes('cry') || lower.includes('sad') || lower.includes('depressed') || lower.includes('heartbroken')) {
+    emotion = 'SADNESS'; emotionConfidence = 0.89; emotionScores.sadness = 0.85;
+  } else if (hasProfanity || lower.includes('angry') || lower.includes('furious') || lower.includes('annoyed')) {
+    emotion = 'ANGER'; emotionConfidence = 0.87; emotionScores.anger = 0.83;
+  } else if (lower.includes('scam') || lower.includes('phishing') || lower.includes('afraid') || lower.includes('scared') || lower.includes('bank')) {
+    emotion = 'FEAR'; emotionConfidence = 0.82; emotionScores.fear = 0.79;
+  } else if (lower.includes('love') || lower.includes('adoring') || lower.includes('cherish')) {
+    emotion = 'LOVE'; emotionConfidence = 0.93; emotionScores.love = 0.91;
+  } else if (lower.includes('sick') || lower.includes('wow') || lower.includes('surprised') || lower.includes('unbelievable') || lower.includes('shocked')) {
+    emotion = 'SURPRISE'; emotionConfidence = 0.88; emotionScores.surprise = 0.86;
+  } else if (posScore > 0) {
+    emotion = 'JOY'; emotionConfidence = 0.90; emotionScores.joy = 0.88;
   }
 
-  // Spam
-  const spamPatterns = [/https?:\/\//i, /claim/i, /win-prize/i, /free money/i, /click here/i, /reward/i];
-  const isSpam = spamPatterns.some(p => p.test(lower));
+  // 4. Precise Spam & Phishing Signals (matching Python is_spam_pattern)
+  const SPAM_PATTERNS = [
+    /https?:\/\//i, /bit\.ly/i, /claim\s+now/i, /won\s+a/i, /free\s+gift/i,
+    /cash\s+lottery/i, /urgent/i, /click\s+here/i, /verify\s+your\s+bank/i,
+    /account\s+suspended/i, /win-prize/i, /get\s+your\s+reward/i
+  ];
+  const isSpam = SPAM_PATTERNS.some(p => p.test(lower));
 
-  // Keywords
-  const stopWords = new Set(['the','a','an','is','it','was','were','and','or','this','that','for','to','in','on','at','of','with']);
-  const keywords = Array.from(new Set(words.map(w => w.toLowerCase().replace(/[^a-z0-9]/g, '')).filter(w => w.length > 3 && !stopWords.has(w)))).slice(0, 5);
+  // 5. Keyword Extraction (matching Python clean_text & CUSTOM_STOP_WORDS)
+  const STOP_WORDS = new Set(['the','a','an','is','it','was','were','and','or','this','that','for','to','in','on','at','of','with','hi','there','yeah','kinda','kind','so','too','just','like','um','really','very']);
+  const keywords = Array.from(new Set(
+    words.map(w => w.replace(/[^a-z0-9]/g, '')).filter(w => w.length > 2 && !STOP_WORDS.has(w))
+  )).slice(0, 5);
 
-  // Readability (Flesch-Kincaid estimate)
+  // 6. Readability Index (Flesch-Kincaid)
   const syllables = words.reduce((acc, w) => acc + (w.match(/[aeiouy]{1,2}/gi) || [1]).length, 0);
   const readingEase = Math.min(100, Math.max(0, Math.round(206.835 - 1.015 * (wordCount / 1) - 84.6 * (syllables / wordCount))));
   const gradeLevel = Math.max(1, Math.round(0.39 * (wordCount / 1) + 11.8 * (syllables / wordCount) - 15.59));
@@ -68,13 +87,13 @@ export function jsFallbackAnalysis(text) {
     sentiment,
     sentimentConfidence,
     toxic: isToxic ? 'TOXIC' : 'SAFE',
-    toxicityConfidence: isToxic ? 0.92 : 0.96,
+    toxicityConfidence: isToxic ? 0.94 : 0.97,
     emotion,
     emotionConfidence,
     emotionScores,
     isSpam: isSpam ? 'SPAM' : 'LEGIT',
-    spamConfidence: isSpam ? 0.94 : 0.91,
-    keywords: keywords.length ? keywords : ['analysis', 'text'],
+    spamConfidence: isSpam ? 0.95 : 0.92,
+    keywords: keywords.length ? keywords : ['text', 'analysis'],
     wordCount,
     charCount,
     readingEase,

@@ -71,7 +71,7 @@ export default function AnalyzerTab() {
           <textarea
             className="input-area"
             value={text}
-            onChange={e => setText(e.target.value)}
+            onChange={e => { setText(e.target.value); setError(''); if (result) setResult(null); }}
             placeholder="Paste any review, comment, tweet, or message here..."
             maxLength={2000}
           />
@@ -79,7 +79,7 @@ export default function AnalyzerTab() {
             <div className="presets">
               <span className="preset-label">Try:</span>
               {Object.entries(SAMPLES).map(([key, val]) => (
-                <button key={key} type="button" className="preset-chip" onClick={() => setText(val)}>
+                <button key={key} type="button" className="preset-chip" onClick={() => { setText(val); setError(''); if (result) setResult(null); }}>
                   {key === 'positive' && '✨ Positive'}
                   {key === 'negative' && '❌ Negative'}
                   {key === 'emotionJoy' && '😊 Joy'}
