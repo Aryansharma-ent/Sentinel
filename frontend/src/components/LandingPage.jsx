@@ -370,9 +370,9 @@ export default function LandingPage({ onLaunch }) {
         flexShrink: 0,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <img src={sentinelLogo} alt="SENTINEL" style={{ width: 26, height: 26, borderRadius: 6, objectFit: 'contain' }} />
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: '13px', letterSpacing: '0.1em', color: '#fff' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <img src={sentinelLogo} alt="SENTINEL" style={{ width: 38, height: 38, borderRadius: 7, objectFit: 'contain' }} />
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: '15px', letterSpacing: '0.08em', color: '#fff' }}>
               SENTINEL
             </span>
           </div>
