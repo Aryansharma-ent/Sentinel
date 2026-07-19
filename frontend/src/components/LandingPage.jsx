@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Smile, Zap, ShieldAlert, BookOpen, Tag, Cpu, Layers, Database, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, BrainCircuit, TrendingUp, ShieldCheck, Radar, Gauge, Fingerprint, Cpu, Layers, Database, Sparkles, CheckCircle2 } from 'lucide-react';
 import sentinelLogo from '../assets/sentinel.png';
 
 /* ─── Sample input text fragments cycling left panel ─── */
@@ -49,41 +49,47 @@ const OUTPUT_SETS = [
   ],
 ];
 
-/* ─── 6 Microservice Feature Details ─── */
+/* ─── 6 Microservice Feature Details with Tech Badges & Icons ─── */
 const FEATURES = [
   {
-    icon: Smile,
+    icon: BrainCircuit,
     color: '#10b981',
+    tag: '416K DATASET',
     title: '6-Class Emotion Engine',
     desc: 'Multi-class Logistic Regression trained on 416,809 records. Evaluates Joy, Sadness, Anger, Fear, Love, and Surprise with full Softmax confidence probability distributions.'
   },
   {
-    icon: Zap,
+    icon: TrendingUp,
     color: '#8b5cf6',
+    tag: '50K IMDB · TF-IDF',
     title: 'N-Gram Sentiment Classifier',
     desc: 'TF-IDF (1,2) N-gram model trained on 50,000 IMDB movie reviews achieving 89.67% accuracy for ultra-fast binary positive and negative classification.'
   },
   {
-    icon: ShieldAlert,
+    icon: ShieldCheck,
     color: '#ef4444',
+    tag: 'REAL-TIME MODERATION',
     title: 'Toxicity & Threat Guard',
     desc: 'Real-time moderation engine that scans text for insults, profanity, harassment patterns, and offensive speech to protect digital communities.'
   },
   {
-    icon: ShieldAlert,
+    icon: Radar,
     color: '#f59e0b',
+    tag: 'HYBRID REGEX + ML',
     title: 'Spam & Phishing Detector',
     desc: 'Hybrid pattern-matching and ML pipeline identifying scam presets, phishing URLs, malicious links, and suspicious text patterns.'
   },
   {
-    icon: BookOpen,
+    icon: Gauge,
     color: '#3b82f6',
+    tag: 'FLESCH-KINCAID INDEX',
     title: 'Readability & Grade Assessor',
     desc: 'Calculates Flesch-Kincaid reading ease scores, grade level difficulty, word density, and sentence complexity metrics.'
   },
   {
-    icon: Tag,
+    icon: Fingerprint,
     color: '#ec4899',
+    tag: 'NLP MINING ENGINE',
     title: 'Key Term Extraction',
     desc: 'Server-side NLP keyword mining engine that strips stop-words and isolates dominant descriptive concepts from raw text.'
   }
@@ -289,17 +295,18 @@ export default function LandingPage({ onLaunch }) {
         }
 
         .feature-card-sci {
-          background: rgba(10, 10, 10, 0.8);
-          border: 1px solid rgba(255, 255, 255, 0.07);
-          border-radius: 12px;
+          background: rgba(10, 10, 10, 0.85);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 14px;
           padding: 1.5rem;
-          transition: all 0.2s ease;
+          position: relative;
+          transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .feature-card-sci:hover {
-          border-color: rgba(139, 92, 246, 0.35);
-          transform: translateY(-2px);
-          box-shadow: 0 8px 30px rgba(139, 92, 246, 0.1);
+          border-color: rgba(139, 92, 246, 0.4);
+          transform: translateY(-3px);
+          box-shadow: 0 12px 36px rgba(139, 92, 246, 0.12);
         }
 
         @keyframes spin1 { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -372,7 +379,7 @@ export default function LandingPage({ onLaunch }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <img src={sentinelLogo} alt="SENTINEL" style={{ width: 38, height: 38, borderRadius: 7, objectFit: 'contain' }} />
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800, fontSize: '15px', letterSpacing: '0.08em', color: '#fff' }}>
+            <span style={{ fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: '15px', letterSpacing: '0.08em', color: '#fff' }}>
               SENTINEL
             </span>
           </div>
@@ -417,14 +424,14 @@ export default function LandingPage({ onLaunch }) {
         </div>
       </header>
 
-      {/* ═══ SECTION 1: CONTROL ROOM HERO HERO VISUALIZATION ═══ */}
+      {/* ═══ SECTION 1: CONTROL ROOM HERO VISUALIZATION ═══ */}
       <div className="control-hero-section">
 
         <div style={{ position: 'relative', zIndex: 5, padding: '1.25rem 1.25rem 0.5rem', flexShrink: 0 }}>
           <h1 style={{
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', sans-serif",
             fontSize: 'clamp(1.35rem, 3.5vw, 2.25rem)',
-            fontWeight: 800,
+            fontWeight: 700,
             letterSpacing: '-0.03em',
             color: '#fff',
             lineHeight: 1.1,
@@ -578,7 +585,7 @@ export default function LandingPage({ onLaunch }) {
           <div style={{ fontSize: '10px', letterSpacing: '0.15em', color: '#a78bfa', fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase', fontWeight: 700, marginBottom: '0.75rem' }}>
             // PARALLEL ENGINE CAPABILITIES
           </div>
-          <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 800, fontFamily: 'Plus Jakarta Sans, sans-serif', color: '#ffffff', letterSpacing: '-0.03em', lineHeight: 1.15 }}>
+          <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', sans-serif", color: '#ffffff', letterSpacing: '-0.03em', lineHeight: 1.15 }}>
             6 Microservices Working in Parallel
           </h2>
           <p style={{ fontSize: '14.5px', color: 'rgba(255,255,255,0.45)', marginTop: '0.75rem', lineHeight: 1.6 }}>
@@ -592,14 +599,17 @@ export default function LandingPage({ onLaunch }) {
             const Icon = f.icon;
             return (
               <div key={i} className="feature-card-sci">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.875rem' }}>
-                  <div style={{ width: 36, height: 36, borderRadius: 8, background: `${f.color}15`, border: `1px solid ${f.color}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: f.color }}>
-                    <Icon size={18} />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                  <div style={{ width: 38, height: 38, borderRadius: 10, background: `${f.color}15`, border: `1px solid ${f.color}35`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: f.color, boxShadow: `0 0 16px ${f.color}15` }}>
+                    <Icon size={20} />
                   </div>
-                  <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#ffffff', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-                    {f.title}
-                  </h3>
+                  <span style={{ fontSize: '9px', fontFamily: 'JetBrains Mono, monospace', color: f.color, background: `${f.color}12`, border: `1px solid ${f.color}30`, padding: '0.2rem 0.5rem', borderRadius: 4, fontWeight: 700, letterSpacing: '0.08em' }}>
+                    {f.tag}
+                  </span>
                 </div>
+                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#ffffff', fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', sans-serif", marginBottom: '0.5rem', letterSpacing: '-0.01em' }}>
+                  {f.title}
+                </h3>
                 <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>
                   {f.desc}
                 </p>
@@ -614,7 +624,7 @@ export default function LandingPage({ onLaunch }) {
             <div style={{ fontSize: '10px', letterSpacing: '0.15em', color: '#06b6d4', fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase', fontWeight: 700, marginBottom: '0.5rem' }}>
               // ARCHITECTURE & INFRASTRUCTURE
             </div>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans, sans-serif', color: '#ffffff' }}>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 700, fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', sans-serif", color: '#ffffff' }}>
               Microservice Dataflow Pipeline
             </h2>
           </div>
@@ -623,7 +633,7 @@ export default function LandingPage({ onLaunch }) {
             {PIPELINE_STEPS.map((s, i) => (
               <div key={i} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, padding: '1.25rem' }}>
                 <span style={{ fontSize: '11px', fontFamily: 'JetBrains Mono, monospace', color: '#a78bfa', fontWeight: 700 }}>{s.step}</span>
-                <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff', marginTop: '0.35rem', marginBottom: '0.35rem' }}>{s.title}</h4>
+                <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff', marginTop: '0.35rem', marginBottom: '0.35rem', fontFamily: "'Space Grotesk', sans-serif" }}>{s.title}</h4>
                 <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>{s.desc}</p>
               </div>
             ))}
@@ -632,7 +642,7 @@ export default function LandingPage({ onLaunch }) {
 
         {/* ═══ SECTION 4: CALL TO ACTION BANNER ═══ */}
         <div style={{ textAlign: 'center', background: 'linear-gradient(180deg, rgba(139,92,246,0.08) 0%, rgba(0,0,0,0) 100%)', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 16, padding: '3.5rem 2rem' }}>
-          <h2 style={{ fontSize: '2rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans, sans-serif', color: '#ffffff', marginBottom: '0.75rem' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 700, fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', sans-serif", color: '#ffffff', marginBottom: '0.75rem' }}>
             Ready to test SENTINEL text intelligence?
           </h2>
           <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.5)', maxWidth: '540px', margin: '0 auto 2rem auto', lineHeight: 1.6 }}>
