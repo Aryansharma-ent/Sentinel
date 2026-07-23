@@ -14,23 +14,23 @@ export function jsFallbackAnalysis(text) {
   const wordCount = words.length || 1;
   const charCount = text.length;
 
-  // 1. Precise Profanity & Toxicity (matching Python PROFANITY_WORDS)
+  // 1. Precise Profanity, Insult & Toxicity Guard
   const PROFANITY = new Set(['fuck', 'shit', 'bitch', 'asshole', 'bastard', 'crap', 'bullshit', 'dick', 'pussy', 'damn', 'slut', 'whore']);
-  const HARASSMENT = new Set(['die', 'kill', 'retard', 'nigger', 'faggot']);
+  const HARASSMENT = new Set(['die', 'kill', 'retard', 'nigger', 'faggot', 'idiot', 'stupid', 'dumb', 'loser', 'garbage', 'trash', 'useless', 'ugly', 'scam']);
   
-  const hasProfanity = words.some(w => PROFANITY.has(w.replace(/[^a-z]/g, '')));
-  const hasHarassment = words.some(w => HARASSMENT.has(w.replace(/[^a-z]/g, '')));
+  const cleanWords = words.map(w => w.replace(/[^a-z]/g, ''));
+  const hasProfanity = cleanWords.some(w => PROFANITY.has(w));
+  const hasHarassment = cleanWords.some(w => HARASSMENT.has(w)) || lower.includes('nobody likes you') || lower.includes('get off');
   const isToxic = hasProfanity || hasHarassment;
 
-  // 2. High-Precision Sentiment (Slang aware: sick, dope, lit, fire, awesome, good)
+  // 2. High-Precision Sentiment
   const POSITIVE_LEXICON = new Set(['good', 'great', 'awesome', 'excellent', 'sick', 'dope', 'lit', 'fire', 'amazing', 'love', 'loved', 'best', 'happy', 'outstanding', 'surprised', 'super', 'wonderful', 'fantastic', 'cool', 'brilliant', 'insane', 'nice']);
-  const NEGATIVE_LEXICON = new Set(['bad', 'worst', 'terrible', 'scam', 'broken', 'hate', 'garbage', 'poor', 'sad', 'delay', 'delayed', 'horrible', 'fake', 'disaster', 'trash', 'awful', 'useless']);
+  const NEGATIVE_LEXICON = new Set(['bad', 'worst', 'terrible', 'scam', 'broken', 'hate', 'garbage', 'poor', 'sad', 'delay', 'delayed', 'horrible', 'fake', 'disaster', 'trash', 'awful', 'useless', 'idiot', 'stupid', 'dumb', 'nobody']);
 
   let posScore = 0;
   let negScore = 0;
 
-  words.forEach(w => {
-    const clean = w.replace(/[^a-z]/g, '');
+  cleanWords.forEach(clean => {
     if (POSITIVE_LEXICON.has(clean)) posScore++;
     if (NEGATIVE_LEXICON.has(clean)) negScore++;
   });
@@ -38,7 +38,7 @@ export function jsFallbackAnalysis(text) {
   let sentiment = 'POSITIVE';
   let sentimentConfidence = 0.89;
 
-  if (negScore > posScore) {
+  if (negScore > posScore || isToxic) {
     sentiment = 'NEGATIVE';
     sentimentConfidence = 0.91;
   } else if (posScore === 0 && negScore === 0) {
@@ -48,20 +48,29 @@ export function jsFallbackAnalysis(text) {
   // 3. Emotion Classifier (matching 6 classes: joy, sadness, anger, fear, love, surprise)
   let emotion = 'JOY';
   let emotionConfidence = 0.85;
-  const emotionScores = { joy: 0.25, sadness: 0.15, anger: 0.15, fear: 0.15, love: 0.15, surprise: 0.15 };
+  let emotionScores = { joy: 0.15, sadness: 0.15, anger: 0.15, fear: 0.15, love: 0.15, surprise: 0.15 };
 
-  if (lower.includes('cry') || lower.includes('sad') || lower.includes('depressed') || lower.includes('heartbroken')) {
-    emotion = 'SADNESS'; emotionConfidence = 0.89; emotionScores.sadness = 0.85;
-  } else if (hasProfanity || lower.includes('angry') || lower.includes('furious') || lower.includes('annoyed')) {
-    emotion = 'ANGER'; emotionConfidence = 0.87; emotionScores.anger = 0.83;
+  if (hasProfanity || hasHarassment || lower.includes('angry') || lower.includes('furious') || lower.includes('annoyed') || lower.includes('idiot') || lower.includes('garbage')) {
+    emotion = 'ANGER'; emotionConfidence = 0.88;
+    emotionScores = { joy: 0.02, sadness: 0.08, anger: 0.82, fear: 0.04, love: 0.01, surprise: 0.03 };
+  } else if (lower.includes('cry') || lower.includes('sad') || lower.includes('depressed') || lower.includes('heartbroken') || lower.includes('nobody')) {
+    emotion = 'SADNESS'; emotionConfidence = 0.89;
+    emotionScores = { joy: 0.02, sadness: 0.85, anger: 0.06, fear: 0.04, love: 0.01, surprise: 0.02 };
   } else if (lower.includes('scam') || lower.includes('phishing') || lower.includes('afraid') || lower.includes('scared') || lower.includes('bank')) {
-    emotion = 'FEAR'; emotionConfidence = 0.82; emotionScores.fear = 0.79;
+    emotion = 'FEAR'; emotionConfidence = 0.82;
+    emotionScores = { joy: 0.02, sadness: 0.06, anger: 0.05, fear: 0.82, love: 0.01, surprise: 0.04 };
   } else if (lower.includes('love') || lower.includes('adoring') || lower.includes('cherish')) {
-    emotion = 'LOVE'; emotionConfidence = 0.93; emotionScores.love = 0.91;
+    emotion = 'LOVE'; emotionConfidence = 0.93;
+    emotionScores = { joy: 0.05, sadness: 0.01, anger: 0.01, fear: 0.01, love: 0.90, surprise: 0.02 };
   } else if (lower.includes('sick') || lower.includes('wow') || lower.includes('surprised') || lower.includes('unbelievable') || lower.includes('shocked')) {
-    emotion = 'SURPRISE'; emotionConfidence = 0.88; emotionScores.surprise = 0.86;
-  } else if (posScore > 0) {
-    emotion = 'JOY'; emotionConfidence = 0.90; emotionScores.joy = 0.88;
+    emotion = 'SURPRISE'; emotionConfidence = 0.88;
+    emotionScores = { joy: 0.05, sadness: 0.02, anger: 0.02, fear: 0.02, love: 0.02, surprise: 0.87 };
+  } else if (sentiment === 'NEGATIVE') {
+    emotion = 'ANGER'; emotionConfidence = 0.78;
+    emotionScores = { joy: 0.05, sadness: 0.25, anger: 0.60, fear: 0.05, love: 0.01, surprise: 0.04 };
+  } else {
+    emotion = 'JOY'; emotionConfidence = 0.90;
+    emotionScores = { joy: 0.88, sadness: 0.02, anger: 0.02, fear: 0.02, love: 0.04, surprise: 0.02 };
   }
 
   // 4. Precise Spam & Phishing Signals (matching Python is_spam_pattern)
