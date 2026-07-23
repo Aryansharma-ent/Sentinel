@@ -118,13 +118,19 @@ def predict_sentiment():
         if contains_profanity(text):
             return jsonify({"sentiment": "negative", "confidence": 0.98}), 200
 
+        # Slang & Praise override
+        slang_positive = {'sick', 'dope', 'lit', 'fire', 'insane', 'awesome', 'cool'}
+        words = set(re.findall(r'\b\w+\b', text.lower()))
+        negative_signals = {'bad', 'terrible', 'worst', 'horrible', 'poor', 'awful', 'not', 'hate', 'garbage', 'trash'}
+
+        if words.intersection(slang_positive) and not words.intersection(negative_signals) and not contains_profanity(text):
+            return jsonify({"sentiment": "positive", "confidence": 0.89}), 200
+
         cleaned = clean_text(text)
         tfidf = sentiment_vectorizer.transform([cleaned])
 
         if tfidf.nnz == 0:
             positive_signals = {'good', 'great', 'awesome', 'nice', 'love', 'cool', 'excellent'}
-            negative_signals = {'bad', 'terrible', 'worst', 'horrible', 'poor', 'awful'}
-            words = set(re.findall(r'\w+', text.lower()))
             if words.intersection(negative_signals):
                 return jsonify({"sentiment": "negative", "confidence": 0.75}), 200
             elif words.intersection(positive_signals):
