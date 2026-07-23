@@ -9,7 +9,7 @@ function normalizePredictions(text, res) {
   const hasNegation = /\b(not|no|never|n't|don't|doesn't|didn't|won't|can't|couldn't|shouldn't|wouldn't|isn't|aren't|wasn't|weren't)\b/i.test(lower);
 
   // 2. Detect Positive Slang / Praise
-  const slangPositive = new Set(['sick', 'dope', 'lit', 'fire', 'insane', 'awesome', 'cool', 'amazing', 'great', 'fantastic', 'wonderful', 'excellent', 'superb', 'outstanding', 'best', 'love', 'loved', 'good', 'nice']);
+  const slangPositive = new Set(['sick', 'dope', 'lit', 'fire', 'insane', 'awesome', 'cool', 'amazing', 'great', 'fantastic', 'wonderful', 'excellent', 'superb', 'outstanding', 'best', 'love', 'loved', 'good', 'nice', 'happy', 'enjoyed']);
   const containsPositiveSlang = Array.from(words).some(w => slangPositive.has(w));
 
   // 3. Detect Negative Distress / Threat / Harm
@@ -21,6 +21,7 @@ function normalizePredictions(text, res) {
   let toxic = Boolean(res.toxic);
   let isSpam = Boolean(res.isSpam);
   let sentiment = (res.sentiment || 'positive').toLowerCase();
+  let emotionScores = res.emotionScores || { joy: 0.16, sadness: 0.16, anger: 0.16, fear: 0.16, love: 0.16, surprise: 0.16 };
 
   // Enforce Distress Emotion
   if (containsDistress || toxic) {
@@ -34,17 +35,30 @@ function normalizePredictions(text, res) {
   }
 
   // Cross-Model Sentiment Conflict Resolution:
-  // If Emotion is fear, sadness, anger OR toxic OR spam OR contains distress OR negated positive -> Sentiment MUST be negative!
   if (['fear', 'sadness', 'anger'].includes(emotion) || toxic || isSpam || (hasNegation && containsPositiveSlang) || containsDistress) {
     sentiment = 'negative';
   } else if (['joy', 'love', 'surprise'].includes(emotion) && !hasNegation) {
     sentiment = 'positive';
   }
 
+  // 5. Negation & Contradiction Fix for Emotion & EmotionScores
+  if (hasNegation && containsPositiveSlang) {
+    sentiment = 'negative';
+    emotion = 'sadness';
+    emotionScores = { sadness: 0.85, anger: 0.08, fear: 0.04, joy: 0.01, love: 0.01, surprise: 0.01 };
+  } else if (sentiment === 'negative' && (emotion === 'joy' || emotion === 'love')) {
+    emotion = 'sadness';
+    emotionScores = { sadness: 0.82, anger: 0.10, fear: 0.04, joy: 0.02, love: 0.01, surprise: 0.01 };
+  } else if (sentiment === 'positive' && (emotion === 'sadness' || emotion === 'anger' || emotion === 'fear')) {
+    emotion = 'joy';
+    emotionScores = { joy: 0.88, sadness: 0.03, anger: 0.03, fear: 0.03, love: 0.02, surprise: 0.01 };
+  }
+
   return {
     ...res,
     sentiment,
     emotion,
+    emotionScores,
     toxic,
     isSpam
   };
