@@ -121,7 +121,10 @@ def predict_sentiment():
         # Slang & Praise override
         slang_positive = {'sick', 'dope', 'lit', 'fire', 'insane', 'awesome', 'cool'}
         words = set(re.findall(r'\b\w+\b', text.lower()))
-        negative_signals = {'bad', 'terrible', 'worst', 'horrible', 'poor', 'awful', 'not', 'hate', 'garbage', 'trash'}
+        negative_signals = {'bad', 'terrible', 'worst', 'horrible', 'poor', 'awful', 'not', 'hate', 'garbage', 'trash', 'terrified', 'scared', 'fear', 'fears', 'scary', 'anxious', 'afraid', 'panic', 'worried', 'crying', 'depressed', 'angry'}
+
+        if words.intersection(negative_signals):
+            return jsonify({"sentiment": "negative", "confidence": 0.88}), 200
 
         if words.intersection(slang_positive) and not words.intersection(negative_signals) and not contains_profanity(text):
             return jsonify({"sentiment": "positive", "confidence": 0.89}), 200

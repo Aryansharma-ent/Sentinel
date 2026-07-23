@@ -25,7 +25,7 @@ export function jsFallbackAnalysis(text) {
 
   // 2. High-Precision Sentiment
   const POSITIVE_LEXICON = new Set(['good', 'great', 'awesome', 'excellent', 'sick', 'dope', 'lit', 'fire', 'amazing', 'love', 'loved', 'best', 'happy', 'outstanding', 'surprised', 'super', 'wonderful', 'fantastic', 'cool', 'brilliant', 'insane', 'nice']);
-  const NEGATIVE_LEXICON = new Set(['bad', 'worst', 'terrible', 'scam', 'broken', 'hate', 'garbage', 'poor', 'sad', 'delay', 'delayed', 'horrible', 'fake', 'disaster', 'trash', 'awful', 'useless', 'idiot', 'stupid', 'dumb', 'nobody']);
+  const NEGATIVE_LEXICON = new Set(['bad', 'worst', 'terrible', 'scam', 'broken', 'hate', 'garbage', 'poor', 'sad', 'delay', 'delayed', 'horrible', 'fake', 'disaster', 'trash', 'awful', 'useless', 'idiot', 'stupid', 'dumb', 'nobody', 'terrified', 'scared', 'fear', 'fears', 'scary', 'anxious', 'afraid', 'panic', 'worried', 'crying', 'depressed', 'angry', 'furious']);
 
   let posScore = 0;
   let negScore = 0;
@@ -35,16 +35,6 @@ export function jsFallbackAnalysis(text) {
     if (NEGATIVE_LEXICON.has(clean)) negScore++;
   });
 
-  let sentiment = 'POSITIVE';
-  let sentimentConfidence = 0.89;
-
-  if (negScore > posScore || isToxic) {
-    sentiment = 'NEGATIVE';
-    sentimentConfidence = 0.91;
-  } else if (posScore === 0 && negScore === 0) {
-    sentimentConfidence = 0.72;
-  }
-
   // 3. Emotion Classifier (matching 6 classes: joy, sadness, anger, fear, love, surprise)
   let emotion = 'JOY';
   let emotionConfidence = 0.85;
@@ -53,24 +43,32 @@ export function jsFallbackAnalysis(text) {
   if (hasProfanity || hasHarassment || lower.includes('angry') || lower.includes('furious') || lower.includes('annoyed') || lower.includes('idiot') || lower.includes('garbage')) {
     emotion = 'ANGER'; emotionConfidence = 0.88;
     emotionScores = { joy: 0.02, sadness: 0.08, anger: 0.82, fear: 0.04, love: 0.01, surprise: 0.03 };
+  } else if (lower.includes('terrified') || lower.includes('scared') || lower.includes('fear') || lower.includes('phishing') || lower.includes('afraid') || lower.includes('panic') || lower.includes('anxious')) {
+    emotion = 'FEAR'; emotionConfidence = 0.82;
+    emotionScores = { joy: 0.02, sadness: 0.06, anger: 0.05, fear: 0.82, love: 0.01, surprise: 0.04 };
   } else if (lower.includes('cry') || lower.includes('sad') || lower.includes('depressed') || lower.includes('heartbroken') || lower.includes('nobody')) {
     emotion = 'SADNESS'; emotionConfidence = 0.89;
     emotionScores = { joy: 0.02, sadness: 0.85, anger: 0.06, fear: 0.04, love: 0.01, surprise: 0.02 };
-  } else if (lower.includes('scam') || lower.includes('phishing') || lower.includes('afraid') || lower.includes('scared') || lower.includes('bank')) {
-    emotion = 'FEAR'; emotionConfidence = 0.82;
-    emotionScores = { joy: 0.02, sadness: 0.06, anger: 0.05, fear: 0.82, love: 0.01, surprise: 0.04 };
   } else if (lower.includes('love') || lower.includes('adoring') || lower.includes('cherish')) {
     emotion = 'LOVE'; emotionConfidence = 0.93;
     emotionScores = { joy: 0.05, sadness: 0.01, anger: 0.01, fear: 0.01, love: 0.90, surprise: 0.02 };
   } else if (lower.includes('sick') || lower.includes('wow') || lower.includes('surprised') || lower.includes('unbelievable') || lower.includes('shocked')) {
     emotion = 'SURPRISE'; emotionConfidence = 0.88;
     emotionScores = { joy: 0.05, sadness: 0.02, anger: 0.02, fear: 0.02, love: 0.02, surprise: 0.87 };
-  } else if (sentiment === 'NEGATIVE') {
-    emotion = 'ANGER'; emotionConfidence = 0.78;
-    emotionScores = { joy: 0.05, sadness: 0.25, anger: 0.60, fear: 0.05, love: 0.01, surprise: 0.04 };
   } else {
     emotion = 'JOY'; emotionConfidence = 0.90;
     emotionScores = { joy: 0.88, sadness: 0.02, anger: 0.02, fear: 0.02, love: 0.04, surprise: 0.02 };
+  }
+
+  // Final Sentiment Determination
+  let sentiment = 'POSITIVE';
+  let sentimentConfidence = 0.89;
+
+  if (negScore > posScore || isToxic || emotion === 'FEAR' || emotion === 'ANGER' || emotion === 'SADNESS') {
+    sentiment = 'NEGATIVE';
+    sentimentConfidence = 0.88;
+  } else if (posScore === 0 && negScore === 0) {
+    sentimentConfidence = 0.72;
   }
 
   // 4. Precise Spam & Phishing Signals (matching Python is_spam_pattern)
